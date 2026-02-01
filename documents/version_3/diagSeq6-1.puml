@@ -1,0 +1,57 @@
+@startuml
+actor Joueur
+participant "labyJeu:LabyJeu" as Jeu
+participant "labyDessin:LabyDessin" as Dessin
+participant "labyrinthe:Labyrinthe" as Laby
+participant "canvas:Canvas" as Canvas
+
+Joueur -> Jeu : update()
+activate Jeu
+
+Jeu -> Laby : etreFini()
+activate Laby
+Laby --> Jeu : false
+deactivate Laby
+
+alt !etreFini
+    Jeu -> Laby : deplacerPerso(...) et deplacerMonstre()
+    activate Laby
+    Laby --> Jeu : void
+    deactivate Laby
+end
+
+Jeu --> Joueur : void
+deactivate Jeu
+
+Joueur -> Dessin : dessinerJeu(jeu, canvas)
+activate Dessin
+Dessin -> Jeu : getLabyrinthe()
+activate Jeu
+Jeu --> Dessin : labyrinthe
+deactivate Jeu
+
+Dessin -> Laby : pj.getVie()
+activate Laby
+Laby --> Dessin : viePerso
+deactivate Laby
+
+alt viePerso <= 0
+    Dessin -> Laby : set etreFini = true
+    activate Laby
+    Laby --> Dessin
+    deactivate Laby
+    
+    Dessin -> Canvas : dessiner fond transparent
+    activate Canvas
+    Canvas --> Dessin
+    deactivate Canvas
+    
+    Dessin -> Canvas : dessiner "Fin du jeu"
+    activate Canvas
+    Canvas --> Dessin
+    deactivate Canvas
+end
+
+Dessin --> Joueur : void
+deactivate Dessin
+@enduml

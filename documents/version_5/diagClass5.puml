@@ -1,0 +1,84 @@
+@startuml
+abstract class Element {
+	- x : int
+	- y : int
+	+ etrePresent(dx : int, dy : int) : boolean
+	+ getX() : int
+	+ getY() : int
+	+ setX (x : int) : void
+	+ setY (y : int) : void
+}
+
+abstract class Objet extends Element {
+	+ Objet(x : int, y : int)
+}
+
+class Amulette extends Objet {
+	+ Amulette(x : int, y : int)
+}
+
+abstract class Personnage extends Element {
+    - vie : int
+    + getVie() : int
+    + subirDegats(nbrDegats : int)
+}
+
+class Monstre extends Personnage {
+	- attaque : boolean
+    + Monstre(x : int, y : int)
+    + attaquer(cible : Personnage)
+    + estAdjacent(p : Personnage) : boolean
+    + isAttacking() : boolean
+    + stopAttaque()
+}
+
+class Sortie extends Element {
+  + Sortie(x : int, y : int)
+}
+
+class Joueur extends Personnage {
+    - inventaire : ArrayList<Objet>
+    - derniereDirection : String
+    + Joueur(x : int, y : int)
+    + setDerniereDirection(derniereDirection : String)
+    + getDerniereDirection() : String
+}
+
+class Labyrinthe {
+    -murs : boolean[][]
+    +etreFini : boolean
+    +<static> MUR : char = 'X'
+    +<static> PJ : char = 'P'
+    +<static> VIDE : char = '.'
+    +<static> MONSTRE : char = 'M'
+    +<static> AMULETTE : char = 'A'
+    +<static> HAUT : String = 'Haut'
+    +<static> BAS : String = 'Bas'
+    +<static> GAUCHE : String = 'Gauche'
+    +<static> DROITE : String = 'Droite'
+    +deplacerPerso(action : String)
+    +deplacerMonstre() : void
+    +monstrePresent(x : int, y : int) : Monstre
+    +objetPresent(x : int, y : int) : Objet
+    +tir() : void
+    +gererTir() : void
+    +getLengthY() : int
+    +getLength() : int
+    +getMur(x : int, y : int) : boolean
+    +getSuivant(x : int, y : int, action : String) : int
+    +getObjet() : ArrayList<Objet>
+    +getMonstre() : ArrayList<Monstre>
+}
+
+class Projectile extends Element {
+    - direction : String
+    + Projectile(x : int, y : int, direction : String)
+    + getDirection() : String
+}
+
+Labyrinthe "*" --> "1" Joueur : -pj
+Labyrinthe "*" --> "*" Monstre : -monstres
+Labyrinthe "*" --> "*" Objet : -objets
+Labyrinthe "*" --> "1" Sortie : -sortie
+Labyrinthe "*" --> "*" Projectile : -listProjectile
+@enduml

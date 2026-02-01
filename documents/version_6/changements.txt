@@ -1,0 +1,3 @@
+Suppression de la classe Objet -> Inventaire du joueur et la liste d'objets dans le labyrinthe deviennent une liste d'amulettes
+Changement de la vitesse du jeu et celle du monstres
+Gestion de la fin du jeu déplacé dans LabyJeu

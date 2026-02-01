@@ -1,0 +1,27 @@
+5.1 Attaque des monstres
+Difficulté : 2 étoiles
+Lorsqu'un monstre doit agir, si le monstre se trouve à coté du héros, alors il ne se
+déplace pas mais il attaque celui-ci.
+Critères de validation
+• Lorsque le monstre est à côté du joueur, il attaque et ne se déplace pas. Par défaut,
+le Héros perd 1 point de vie.
+• Lorsque le monstre est loin du joueur, il n'attaque pas mais se déplace.
+
+
+5.3 Affichage des attaques
+Difficulté : deux étoiles
+Quand un monstre ou le héros attaque, il change de couleur.
+Critères de validation
+• La couleur d'affichage du monstre change au moment où il attaque (passe de rouge
+à noir).
+• La couleur d'affichage du héros change au moment où il attaque (passe de bleu à
+Bleu foncé).
+• Après l'attaque, le joueur et le monstre reprennent une couleur normale.
+
+6.1 Fin du jeu : mort du héros
+Difficulté : deux étoiles
+Lorsque le héros n'a plus de points de vie, le jeu s'arrête et la partie est perdue.
+Critères de validation
+• Le héros par défaut dispose de 5 points de vie.
+• Chaque monstre fait 1 point de dégât lorsque le héros se fait attaquer.
+• Quand le héros meurt, un message de fin est affiché sur la console et le jeu s'arrête.

@@ -1,0 +1,32 @@
+@startuml
+actor "MoteurJeu" as MJ
+participant "labyD : LabyDessin" as labyD
+participant "monstre : Monstre" as monstre
+participant "gc : GraphicsContext" as gc
+
+MJ -> labyD : dessinerJeu(jeu, canvas)
+activate labyD
+    ' --- Début de la portion spécifique aux attaques des monstres ---
+    labyD -> monstre : isAttacking()
+    activate monstre
+    monstre --> labyD : true/false
+    deactivate monstre
+    alt monstre is attacking
+        labyD -> gc : setFill(Color.BLACK)
+        activate gc
+        gc --> labyD :
+        deactivate gc
+    else monstre is not attacking
+        labyD -> gc : setFill(Color.PURPLE)
+        activate gc
+        gc --> labyD :
+        deactivate gc
+    end
+    labyD -> gc : fillOval(x, y, width, height)
+    activate gc
+    gc --> labyD :
+    deactivate gc
+    ' --- Fin de la portion spécifique aux attaques des monstres ---
+labyD --> MJ :
+deactivate labyD
+@enduml

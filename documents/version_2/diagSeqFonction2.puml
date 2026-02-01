@@ -1,0 +1,42 @@
+@startuml
+participant "moteur : MoteurJeu" as moteur
+participant "labyDessin : LabyDessin" as dessin
+participant "laby : Labyrinthe" as laby
+participant "monstre : Monstre" as monstre
+participant "gc : graphicscontext" as canvas
+
+activate moteur
+
+moteur -> dessin : dessinerJeu(jeu, canvas)
+activate dessin
+
+dessin -> laby : getMonstres()
+activate laby
+laby --> dessin : listeMonstres : ArrayList<Monstre>
+deactivate laby
+
+loop monstre : listeMonstre
+    dessin -> monstre : getX()
+    activate monstre
+    monstre --> dessin : x : int
+    deactivate monstre
+
+    dessin -> monstre : getY()
+    activate monstre
+    monstre --> dessin : y : int
+    deactivate monstre
+
+    dessin -> canvas : setFill(Color.PURPLE)
+    activate canvas
+    canvas --> dessin
+    deactivate canvas
+    dessin -> canvas : setOvale(monstre, x, y)
+    activate canvas
+    canvas --> dessin
+    deactivate canvas
+end
+
+dessin --> moteur
+deactivate dessin
+deactivate moteur
+@enduml

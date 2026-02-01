@@ -1,0 +1,32 @@
+@startuml
+actor Joueur
+participant "labyjeu : LabyJeu" as labyjeu
+participant "laby : Labyrinthe" as laby
+participant "j : Joueur" as perso
+participant "proj : Projectile" as proj
+participant "projectiles : ArrayList<Projectile>" as projs
+Joueur -> labyjeu : "Appuie sur F"
+
+activate labyjeu
+labyjeu -> laby : tir()
+
+activate laby
+laby -> perso : getDerniereDirection()
+
+activate perso
+perso --> laby : Direction
+deactivate perso
+
+create proj
+laby -> proj : new
+
+laby -> projs : add(proj)
+activate projs
+projs --> laby
+deactivate projs
+
+laby --> labyjeu
+deactivate laby
+labyjeu --> Joueur
+deactivate labyjeu
+@enduml

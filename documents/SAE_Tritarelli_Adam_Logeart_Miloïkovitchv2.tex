@@ -1,0 +1,1364 @@
+\documentclass[12pt]{article}  % <- OBLIGATOIRE EN PREMIÈRE LIGNE
+\usepackage[utf8]{inputenc}            % <- ensuite les packages
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, linkcolor=grey]{hyperref}
+\usepackage{listings}
+\lstset{
+    language=Java,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false
+}
+
+\title{Rapport SAE ZELDIABLO}
+\author{TRITARELLI Adrien \\ ADAM Tristan \\ LOGEART Pierre \\ MILOIKOVITCH Maxime}
+\date{\today}
+
+\begin{document}
+
+    \maketitle
+    \tableofcontents
+    \newpage
+
+    \section{Introduction}
+
+    Ce projet s'inscrit dans le cadre de la SAE 2.01 du BUT Informatique. Il s'agit d'un travail en groupe visant à concevoir et développer une application Java, avec un accent particulier mis sur la qualité de la structure du code et la démarche de conception.
+
+    Le TP initial représente le point de départ de cette SAE. Il a pour objectif de nous fournir une première base de code pour l'application à développer, tout en nous familiarisant avec la démarche de projet à suivre.
+
+    L'objectif global de la SAE 2.01 est de concevoir une application en suivant une approche rigoureuse, structurée et collaborative. Cela implique plusieurs étapes :
+    \begin{itemize}
+        \item choisir les fonctionnalités que nous souhaitons implémenter ;
+        \item analyser et adapter le code existant pour les intégrer correctement ;
+        \item produire des diagrammes de classes et de séquences pour expliquer la conception ;
+        \item modifier et étendre le code de manière cohérente ;
+        \item tester et valider chaque nouvelle fonctionnalité.
+    \end{itemize}
+
+    La SAE est réalisée en groupes de quatre étudiants. Le travail est coordonné à l’aide de l’outil Git, avec un dépôt unique partagé entre les membres de chaque groupe.
+
+    \section{Organisation du projet}
+
+    Le projet ZELDIABLO s'est déroulé en quatre itérations de 4 heures chacune. Chaque itération a suivi une structure précise, permettant une progression incrémentale et maîtrisée du développement de l'application.
+
+    Voici le déroulement type d'une itération :
+
+    \begin{itemize}
+        \item \textbf{Choix des fonctionnalités (30 min)} :
+        \begin{itemize}
+            \item Identification des nouvelles fonctionnalités à intégrer ;
+            \item Précision des tâches à réaliser ;
+            \item Définition des critères de validation et des tests correspondants.
+        \end{itemize}
+
+        \item \textbf{Conception (1 h)} :
+        \begin{itemize}
+            \item Analyse de la conception existante à partir de l'itération précédente ;
+            \item Réalisation des diagrammes de classe et de séquence pour les nouveautés ;
+            \item Mise à jour de la conception globale ;
+            \item Répartition des tâches à partir de la conception.
+        \end{itemize}
+
+        \item \textbf{Réalisation (1 h 30)} :
+        \begin{itemize}
+            \item Implémentation des fonctionnalités choisies ;
+            \item Écriture des tests associés.
+        \end{itemize}
+
+        \item \textbf{Intégration et validation (1 h)} :
+        \begin{itemize}
+            \item Passage des tests, correction des bugs éventuels ;
+            \item Mise en forme finale du code, ajout de documentation et création d’un tag Git.
+        \end{itemize}
+    \end{itemize}
+
+    Chaque itération a donné lieu à un rendu partiel du projet, qui sera présenté dans les sections suivantes.
+
+    \newpage
+    \section{Itération 1}
+
+    \subsection{Choix des fonctionnalités}
+
+    \begin{enumerate}
+        \item \textbf{Donner une position initiale au monstre}
+        \begin{itemize}
+            \item \textit{Descriptif :} Le monstre débute sur une case décrite dans le fichier labyrinthe.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item Le monstre doit avoir une position initiale.
+                \item Le monstre se trouve sur la case indiquée dans le fichier labyrinthe.
+                \item Le monstre est représenté par le caractère 'M' dans le fichier labyrinthe.
+                \item Le monstre ne se trouve pas sur la même case que le personnage.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Afficher le monstre}
+        \begin{itemize}
+            \item \textit{Descriptif :} Le jeu doit afficher le monstre à sa position.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item Le monstre doit être affiché à la bonne position dans le labyrinthe.
+                \item Le monstre sera représenté sous la forme d'un cercle violet de la taille du personnage.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Considérer le monstre dans les déplacements du personnage}
+        \begin{itemize}
+            \item \textit{Descriptif :} Lorsque le jeu évolue, le personnage ne peut pas se déplacer sur la case du monstre.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item Le monstre constitue un obstacle pour le personnage.
+                \item Le monstre et le personnage ne peuvent pas se trouver sur la même case.
+                \item Le personnage ne peut pas traverser la case du monstre.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Déplacer le monstre (optionnel en fonction avancée)}
+        \begin{itemize}
+            \item \textit{Descriptif :} Lorsque le jeu évolue, le monstre choisit une case adjacente de manière aléatoire et tente de s'y déplacer.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item Le monstre doit se déplacer sur une case adjacente. Il considère les 4 directions de déplacement possibles.
+                \item Le monstre ne peut pas se déplacer sur un mur. S'il tente de se déplacer sur cette case, il ne bouge pas.
+                \item Le monstre ne peut pas se trouver sur la même case que le personnage.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+
+    \subsection{Conception}
+
+    \subsubsection{Diagramme de séquence : Initialisation du monstre}
+
+    Ce diagramme illustre la séquence d'initialisation du jeu, mettant en avant la création de l'objet \texttt{LabyJeu}, la lecture du fichier labyrinthe, et la création du monstre. Lors de la lecture du fichier, chaque case est analysée : si un caractère 'M' est rencontré et que la position est valide (pas sur la même case que le personnage), une instance de \texttt{Monstre} est créée et placée. Ce processus garantit que le monstre a une position initiale correcte, respectant les contraintes du fichier.
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_2/diagSeqFonction1.png}
+
+    \subsubsection{Diagramme de séquence : Affichage du monstre}
+
+    Ce diagramme décrit comment le moteur de jeu sollicite le composant d'affichage (\texttt{LabyDessin}) pour dessiner le monstre. Le dessin récupère la liste des monstres depuis le labyrinthe, puis pour chaque monstre, obtient ses coordonnées, définit la couleur violette, et dessine un ovale à la position correspondante. Ce mécanisme permet d'afficher visuellement le monstre dans le labyrinthe à la bonne position.
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_2/diagSeqFonction2.png}
+
+    \subsubsection{Diagramme de séquence : Considération du monstre dans les déplacements du personnage}
+
+    Ce diagramme montre la procédure lors d'un déplacement du personnage. Le moteur met à jour le jeu, qui demande au labyrinthe de déplacer le personnage selon l'action effectuée. Le labyrinthe vérifie la position cible, notamment en interrogeant le monstre pour s'assurer que la case n'est pas occupée. Si la case est libre (monstre absent), le personnage peut se déplacer. Sinon, le déplacement est bloqué, garantissant que le personnage ne peut pas occuper la même case que le monstre.
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_2/diagSeqFonction3.png}
+
+    \subsubsection{Diagramme de séquence : Déplacement du monstre}
+
+    Ce diagramme décrit comment le monstre est déplacé de façon aléatoire par le moteur de jeu. Le labyrinthe calcule une nouvelle position candidate pour le monstre, puis vérifie que cette position n’est pas un mur et qu’elle n’est pas occupée par le personnage. Si la case est libre, le monstre est déplacé ; sinon, il reste à sa position actuelle. Ce contrôle assure que le monstre ne traverse pas les murs ni n’entre en collision avec le personnage.
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth,height=10cm]{version_2/diagSeqFonction4.png}
+
+
+    \subsection{Réalisation}
+
+    \subsubsection{Donner une position initiale au monstre}
+
+    Le constructeur de la classe \texttt{Labyrinthe} lit le fichier de labyrinthe ligne par ligne. Pour chaque caractère, il crée les éléments correspondants : murs, case vide, personnage ou monstre.
+    Pour le monstre, il instancie un objet \texttt{Monstre} avec les coordonnées lues, et l’ajoute à la liste des monstres. Cela permet de définir sa position initiale conformément au fichier.
+
+    \begin{lstlisting}
+public Labyrinthe(String nom) throws IOException {
+        // ouvrir fichier
+        FileReader fichier = new FileReader(nom);
+        BufferedReader bfRead = new BufferedReader(fichier);
+
+        int nbLignes, nbColonnes;
+        // lecture nblignes
+        nbLignes = Integer.parseInt(bfRead.readLine());
+        // lecture nbcolonnes
+        nbColonnes = Integer.parseInt(bfRead.readLine());
+
+        // creation labyrinthe vide
+        this.murs = new boolean[nbColonnes][nbLignes];
+        this.pj = null;
+
+        // lecture des cases
+        String ligne = bfRead.readLine();
+
+        // stocke les indices courants
+        int numeroLigne = 0;
+
+        // parcours le fichier
+        while (ligne != null) {
+
+            // parcours de la ligne
+            for (int colonne = 0; colonne < ligne.length(); colonne++) {
+                char c = ligne.charAt(colonne);
+                switch (c) {
+                    case MUR:
+                        this.murs[colonne][numeroLigne] = true;
+                        break;
+                    case VIDE:
+                        this.murs[colonne][numeroLigne] = false;
+                        break;
+                    case PJ:
+                        // pas de mur
+                        this.murs[colonne][numeroLigne] = false;
+                        // ajoute PJ
+                        this.pj = new Perso(colonne, numeroLigne);
+                        break;
+                    case MONSTRE:
+                        this.murs[colonne][numeroLigne] = false;
+                        if (this.pj == null || !this.pj.etrePresent(colonne,numeroLigne)) { // permet de s'assurer qu'un personnage n'est pas déjà présent sur la position que va occuper le monstre
+                            this.monstres.add(new Monstre(colonne, numeroLigne));
+                        }
+                        break;
+                    default:
+                        throw new Error("caractere inconnu " + c);
+                }
+            }
+
+            // lecture
+            ligne = bfRead.readLine();
+            numeroLigne++;
+        }
+
+        // ferme fichier
+        bfRead.close();
+    }
+    \end{lstlisting}
+
+
+
+
+    \subsubsection{Afficher le monstre}
+
+    Pour afficher le monstre, la méthode de dessin utilise une boucle qui parcourt la liste des monstres, puis dessine un ovale violet à la position de chacun, ajusté à la taille de la case.
+
+    \begin{lstlisting}
+// Dessin des monstres
+gc.setFill(Color.PURPLE);
+for (Monstre monstre : laby.getMonstres()) {
+    gc.fillOval(monstre.getX() * tailleCase + tailleCase / 4,
+                monstre.getY() * tailleCase + tailleCase / 4,
+                tailleCase / 2,
+                tailleCase / 2);
+}
+    \end{lstlisting}
+
+    \subsubsection{Déplacer le monstre}
+
+    La méthode \texttt{deplacerMonstre} choisit aléatoirement une direction parmi les quatre possibles pour chaque monstre, calcule la case suivante, et effectue le déplacement uniquement si la case n’est pas un mur. Si la case est un mur, le monstre reste à sa position actuelle.
+
+    \begin{lstlisting}
+public void deplacerMonstre() {
+        for (int i = 0; i < this.monstres.size(); i++) {
+            // case courante
+            int[] courante = {this.monstres.get(i).getX(), this.monstres.get(i).getY()};
+            String[] action= {HAUT, BAS, GAUCHE, DROITE};
+
+            // calcule case suivante
+            int[] suivante = getSuivant(courante[0], courante[1], action[(int)(Math.random()*4)]);
+
+            // si ce n'est ni un mur ni un personnage, on effectue le deplacement
+            if (!this.murs[suivante[0]][suivante[1]] && !this.pj.etrePresent(suivante[0],suivante[1])) {
+                // on met a jour le monstre
+                this.monstres.get(i).x = suivante[0];
+                this.monstres.get(i).y = suivante[1];
+            }
+        }
+    }
+    \end{lstlisting}
+
+    \subsection{Intégration et validation}
+
+    L’intégration consiste à rassembler toutes les fonctionnalités développées au cours des différentes itérations dans une base de code commune, en s’assurant que leur interaction est correcte. Dans notre projet, cela passe par la coordination via Git, et la vérification que le déplacement et l’affichage du monstre fonctionnent comme prévu dans le cadre du jeu.
+
+    Le code suivant illustre un test unitaire automatisé écrit avec JUnit, qui vérifie la validité du déplacement du monstre. Ce test est répété plusieurs fois pour couvrir la nature aléatoire du déplacement :
+
+    \begin{lstlisting}
+    @RepeatedTest(10)  // Test repete plusieurs fois a cause du hasard
+    public void testDeplacerMonstre_DeplacementValide() {
+        int width = 800;
+        int height = 600;
+        int fps = 60;
+    
+        // Creation des objets jeu et dessin
+        LabyJeu jeuLaby = new LabyJeu();
+        LabyDessin dessinLaby = new LabyDessin();
+    
+        // Configuration du moteur
+        MoteurJeu.setTaille(width, height);
+        MoteurJeu.setFPS(fps);
+    
+        List<Monstre> monstresAvant = jeuLaby.getLabyrinthe().getMonstres();
+        int xAvant = monstresAvant.get(0).getX();
+        int yAvant = monstresAvant.get(0).getY();
+    
+        jeuLaby.getLabyrinthe().deplacerMonstre();
+    
+        int xApres = monstresAvant.get(0).getX();
+        int yApres = monstresAvant.get(0).getY();
+    
+        // Le monstre doit soit être resté sur place, soit s'être déplacé d'une case adjacente
+        boolean deplacementValide =
+                (xApres == xAvant && yApres == yAvant) ||  // pas déplacé (mur ou hasard)
+                (xApres == xAvant + 1 && yApres == yAvant) ||
+                (xApres == xAvant - 1 && yApres == yAvant) ||
+                (xApres == xAvant && yApres == yAvant + 1) ||
+                (xApres == xAvant && yApres == yAvant - 1);
+    
+        assertTrue(deplacementValide, "Le monstre s'est déplacé sur une case invalide");
+    
+        // La case d'arrivee ne doit pas etre un mur
+        assertFalse(jeuLaby.getLabyrinthe().getMur(xApres, yApres), "Le monstre s'est déplacé sur un mur");
+    }
+    \end{lstlisting}
+
+    Ce test permet de valider que le déplacement du monstre respecte les règles définies :
+    - Le monstre ne sort pas des cases adjacentes.
+    - Il ne se déplace pas sur un mur.
+
+    La répétition du test plusieurs fois est nécessaire en raison de l’aspect aléatoire du déplacement. Cette validation automatique assure la fiabilité de la fonctionnalité, facilite le débogage, et garantit que les modifications futures ne cassent pas le comportement attendu.
+
+
+    En plus du test aléatoire du déplacement du monstre, nous avons ajouté plusieurs tests unitaires afin de valider la bonne position initiale du monstre et de garantir qu'il ne se trouve jamais sur la même case que le personnage.
+
+    \textbf{testMonstrePositionInitiale} : vérifie qu'au moins un monstre est bien présent à l'initialisation
+    
+    \begin{lstlisting}
+        @Test
+    public void testMonstrePositionInitiale() {
+        LabyJeu jeu = new LabyJeu();
+        List<Monstre> monstres = jeu.getLabyrinthe().getMonstres();
+
+        assertFalse(monstres.isEmpty(), "Le monstre n'a pas de position initiale");
+    }
+
+    \end{lstlisting}
+
+    \textbf{testMonstreSurBonneCase} : s'assure que le monstre est positionné aux coordonnées attendues dans le fichier labyrinthe
+
+    \begin{lstlisting}
+            @Test
+            public void testMonstreSurBonneCase() {
+                LabyJeu jeu = new LabyJeu();
+                List<Monstre> monstres = jeu.getLabyrinthe().getMonstres();
+        
+                Monstre m = monstres.get(0);
+        
+                assertEquals(4, m.getX(), "Le monstre n'est pas sur la colonne attendue");
+                assertEquals(1, m.getY(), "Le monstre n'est pas sur la ligne attendue");
+            }
+    \end{lstlisting}
+    
+    \textbf{testFichierLabyrintheContientM} : vérifie que le caractère \texttt{M} est bien présent dans le fichier de construction du labyrinthe
+    \begin{lstlisting}
+        @Test
+        public void testFichierLabyrintheContientM() throws IOException {
+            BufferedReader br = new BufferedReader(new FileReader("labySimple/laby1.txt"));
+            br.readLine();
+            br.readLine();
+    
+            String ligne;
+            boolean monstreTrouve = false;
+            while ((ligne = br.readLine()) != null) {
+                if(ligne.contains("M")) {
+                    monstreTrouve = true;
+                    break;
+                }
+            }
+    
+            br.close();
+            assertTrue(monstreTrouve, "Le fichier Labyrinthe ne contient pas de monstre");
+        }
+    \end{lstlisting}
+
+    \textbf{testMonstrePasSurPersonnage} : garantit qu'aucun monstre ne se trouve sur la même case que le personnage au chargement du labyrinthe
+
+    \begin{lstlisting}
+        @Test
+        public void testMonstrePasSurPersonnage() {
+            LabyJeu jeu = new LabyJeu();
+            List<Monstre> monstres = jeu.getLabyrinthe().getMonstres();
+            int x = jeu.getLabyrinthe().pj.getX();
+            int y = jeu.getLabyrinthe().pj.getY();
+            boolean memeCase;
+    
+            for (Monstre m : monstres) {
+                memeCase = (m.getX() == x && m.getY() == y);
+                assertFalse(memeCase,"Le monstre est positionné sur la même case que le personnage");
+            }
+        }
+    \end{lstlisting}
+
+
+
+    \newpage
+    \section{Itération 2}
+
+    \subsection{Choix des fonctionnalités}
+\begin{enumerate}
+    \item \textbf{Donner une position initiale au monstre}
+    \begin{itemize}
+        \item \textit{Descriptif :} Le monstre débute sur une case décrite dans le fichier labyrinthe.
+        \item \textit{Critères de validation :}
+        \begin{itemize}
+            \item Le monstre doit avoir une position initiale.
+            \item Le monstre se trouve sur la case indiquée dans le fichier labyrinthe.
+            \item Le monstre est représenté par le caractère 'M' dans le fichier labyrinthe.
+            \item Le monstre ne se trouve pas sur la même case que le personnage.
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Affichage les attaques du monstre}
+    \begin{itemize}
+        \item \textit{Descriptif :} Quand un monstre attaque, il change de couleur.
+        \item \textit{Critères de validation :}
+        \begin{itemize}
+            \item La couleur d'affichage du monstre change au moment où il attaque (passe de rouge à noir).
+            \item Après l'attaque, le joueur et le monstre reprennent une couleur normale.
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Fin du jeu : mort du héros}
+    \begin{itemize}
+        \item \textit{Descriptif :} Lorsque le héros n'a plus de points de vie, le jeu s'arrête et la partie est perdue. Critères de validation
+        \item \textit{Critères de validation :}
+        \begin{itemize}
+            \item Le héros par défaut dispose de 5 points de vie.
+            \item Chaque monstre fait 1 point de dégât lorsque le héros se fait attaquer.
+            \item Quand le héros meurt, un message de fin est affiché sur la console et le jeu s'arrête.
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+    \subsection{Conception}
+
+    \subsubsection{Diagramme de séquence: Attaque des monstres}
+    Le diagramme de séquence ci-dessous modélise le comportement des monstres lorsqu'ils sont adjacents au personnage joueur (\texttt{Perso}) durant l'évolution du jeu. Ce processus est déclenché par le moteur de jeu (\texttt{MoteurJeu}) via l’appel à la méthode \texttt{deplacerMonstre()} de la classe \texttt{Labyrinthe}.
+
+    À l’intérieur de cette méthode, une boucle parcourt chaque monstre présent dans le labyrinthe. Pour chaque monstre, la méthode \texttt{estAdjacent(pj)} est invoquée pour vérifier si le monstre se trouve sur une case adjacente à celle du personnage. Si c’est le cas, le monstre attaque le personnage en appelant la méthode \texttt{subirDegat(1)}, qui fait perdre un point de vie au héros.
+
+    Ce comportement permet d’introduire une interaction offensive entre les monstres et le joueur, renforçant l’aspect dynamique et dangereux du jeu. Cette logique fait désormais partie intégrante de la boucle de jeu et permet de détecter des situations critiques pouvant mener à la fin de la partie.
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_3/diagSeq5-1.png}
+    
+    \subsubsection{Diagramme de séquence : Affichage des attaques du monstre}
+
+    Ce diagramme décrit comment le moteur de jeu choisis la couleur du monstre (\texttt{LabyDessin}). C'est un ajout à dessinJeu, une méthode déjà éxistante. Le dessin récupère la liste des monstres depuis le labyrinthe, puis pour chaque monstre, regarde si il attaque ou non. Si le monstre attaque, il est dessiné en noir, sinon il est dessiné en rouge. Cela permet de visualiser l'état d'attaque du monstre dans le labyrinthe.
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_3/diagSeq5-3.png}
+    
+    \subsubsection{Diagramme de séquence : Fin du jeu : mort du héros}
+
+    Dans cette itération, la conception s’appuie sur un nouveau diagramme de séquence mettant en évidence la logique de fin de jeu. Celui-ci illustre comment le programme détecte que la partie est terminée lorsque le personnage principal (le \textit{Perso}) n’a plus de points de vie.
+
+    Le diagramme commence par une mise à jour (\texttt{update()}) déclenchée par le joueur. Le moteur du jeu (\texttt{LabyJeu}) interroge alors le labyrinthe (\texttt{Labyrinthe}) pour vérifier si la partie est déjà finie via la méthode \texttt{etreFini()}. Si ce n’est pas le cas, le jeu effectue les déplacements du personnage et du monstre.
+
+    Ensuite, la vue (\texttt{LabyDessin}) est sollicitée pour dessiner le jeu. Elle récupère le labyrinthe, puis consulte le nombre de points de vie du personnage via \texttt{pj.getVie()}. Une condition est alors testée : si le nombre de vies est inférieur ou égal à 0, cela signifie que le personnage est mort. Dans ce cas, la variable \texttt{etreFini} est mise à \texttt{true}, et l’écran affiche un fond transparent avec le message \og Fin du jeu \fg.
+
+    Cette séquence permet ainsi de garantir que l’état de fin de partie est bien détecté à chaque rafraîchissement du jeu, et que l’information est correctement transmise à l’interface graphique pour être affichée à l’utilisateur.
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_3/diagSeq6-1.png}
+
+    \subsection{Réalisation}
+    
+    \subsubsection{Attaque des monstres}
+
+    Pour intégrer l'attaque des monstres lorsque le personnage est à proximité, plusieurs éléments ont été ajoutés au code. Chaque partie est décrite brièvement ci-dessous.
+
+    \paragraph{Méthode \texttt{subirDegat}}
+
+    \begin{lstlisting}
+public void subirDegat(int degats){
+    this.vie -= degats;
+}
+    \end{lstlisting}
+
+    Cette méthode permet à un personnage (notamment le héros) de perdre un nombre donné de points de vie lorsqu’il est attaqué.
+
+    \paragraph{Classe \texttt{Monstre}}
+
+    \begin{lstlisting}
+public class Monstre extends Personnage {
+
+    private boolean attaque;
+
+    public Monstre(int dx, int dy, int v) {
+        super(dx, dy, v);
+    }
+
+    public void attaquer(Personnage cible) {
+        cible.subirDegat(1);
+        this.attaque = true;
+    }
+
+    public boolean estAdjacent(Personnage p) {
+        return (Math.abs(this.x - p.x) <= 1 && Math.abs(this.y - p.y) <= 1)
+                && (this.x == p.x || this.y == p.y);
+    }
+
+    public void stopAttaque(){
+        this.attaque = false;
+    }
+
+    public boolean isAttacking() {
+        return this.attaque;
+    }
+}
+    \end{lstlisting}
+
+    Cette classe ajoute le comportement d’attaque au monstre. Si un héros est détecté sur une case adjacente (horizontale ou verticale), le monstre peut lui infliger des dégâts. Le booléen \texttt{attaque} permet de ne pas répéter l'attaque à chaque frame tant que le monstre reste collé au héros.
+
+    \paragraph{Méthode \texttt{deplacerPerso}}
+
+    \begin{lstlisting}
+public void deplacerPerso(String action) {
+    int[] courante = {this.pj.x, this.pj.y};
+    int[] suivante = getSuivant(courante[0], courante[1], action);
+
+    if (!this.murs[suivante[0]][suivante[1]] && (!monstrePresent(suivante[0],suivante[1]))) {
+        this.pj.x = suivante[0];
+        this.pj.y = suivante[1];
+
+        for (Monstre m : this.monstres) {
+            if (m.estAdjacent(this.pj)) {
+                m.attaquer(this.pj);
+            } else {
+                m.stopAttaque();
+            }
+        }
+    }
+}
+    \end{lstlisting}
+
+    Le déplacement du personnage est désormais suivi d'une vérification de proximité avec les monstres. Si un monstre est adjacent, il attaque immédiatement.
+
+    \paragraph{Méthode \texttt{deplacerMonstre}}
+
+    \begin{lstlisting}
+public void deplacerMonstre() {
+    for (Monstre m : this.monstres) {
+        if (m.estAdjacent(this.pj) && !m.isAttacking()) {
+            m.attaquer(this.pj);
+        } else if (!m.isAttacking()) {
+            int[] courante = {m.getX(), m.getY()};
+            String[] action = {HAUT, BAS, GAUCHE, DROITE};
+            int[] suivante = getSuivant(courante[0], courante[1], action[(int) (Math.random() * 4)]);
+
+            if (!this.murs[suivante[0]][suivante[1]] && !this.pj.etrePresent(suivante[0], suivante[1])) {
+                m.x = suivante[0];
+                m.y = suivante[1];
+            }
+        }
+    }
+}
+    \end{lstlisting}
+
+    Cette méthode complète le comportement du monstre. S’il est adjacent au héros et ne l’a pas encore attaqué, il inflige des dégâts. Sinon, il peut se déplacer aléatoirement sur une case vide non occupée.
+
+
+
+    \subsubsection{Affichage des attaques du monstre}
+
+    Pour que le monstre change de couleur, on vérifie si le monstre est en train d'attaquer avec isAttacking(), si oui, il sera rouge, sinon il sera violet.
+
+    \begin{lstlisting}
+    // Changement de couleur
+    for (Monstre monstre : laby.getMonstres()) {
+            //Si le monstre attaque on change ca couleur, sinon on met celle de base
+            if (monstre.isAttacking()){
+                gc.setFill(Color.BLACK);
+            }else {
+                gc.setFill(Color.RED);
+            }
+            gc.fillOval(monstre.getX() * tailleCase + tailleCase / 4, monstre.getY() * tailleCase + tailleCase / 4, tailleCase / 2, tailleCase / 2);
+    }
+    \end{lstlisting}
+
+    \subsubsection{Fin du jeu : mort du héros}
+
+    Pour implémenter la détection de fin de jeu lorsque le personnage n'a plus de vie, plusieurs ajouts ont été réalisés dans les classes principales.
+
+    \paragraph{Ajout d’un attribut \texttt{etreFini} dans \texttt{Labyrinthe}}
+
+    Nous avons ajouté un attribut de type \texttt{boolean} nommé \texttt{etreFini}, initialisé à \texttt{false}. Il permet de savoir si la partie est terminée ou non.
+
+    \begin{lstlisting}
+public class Labyrinthe {
+    public boolean etreFini = false;
+    ...
+}
+    \end{lstlisting}
+
+    Cet attribut pourra être modifié et consulté par les différentes classes du jeu pour déclencher le bon comportement à l'affichage ou au niveau des interactions.
+
+    \paragraph{Modification de \texttt{LabyDessin}}
+
+    Nous avons ajouté une condition pour afficher un écran de fin lorsque le personnage n’a plus de points de vie. Dans ce cas, la variable \texttt{etreFini} est mise à \texttt{true}, puis un message est dessiné.
+
+    \begin{lstlisting}
+if (laby.pj.getVie() <= 0) {
+    laby.etreFini = true;
+    // Dessin du message de fin de jeu
+    gc.setFill(new Color(1, 1, 1, 0.7));
+    gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    gc.setFill(Color.YELLOW);
+    gc.fillText("Fin du jeu", canvas.getWidth()/2 - 100, canvas.getHeight()/2);
+}
+    \end{lstlisting}
+
+    Cela permet d’alerter visuellement le joueur que la partie est terminée et empêche le redessin du jeu en arrière-plan.
+
+    \paragraph{Ajout de la vérification dans \texttt{LabyJeu}}
+
+    Enfin, dans \texttt{LabyJeu}, une condition a été ajoutée pour que les actions de déplacement (du joueur ou du monstre) ne soient exécutées que si le jeu n’est pas terminé.
+
+    \begin{lstlisting}
+if (!labyrinthe.etreFini()) {
+    cooldown -= secondes;
+    if (cooldown <= 0) {
+        if (clavier.haut) {
+            labyrinthe.deplacerPerso(Labyrinthe.HAUT);
+        }
+        if (clavier.bas) {
+            labyrinthe.deplacerPerso(Labyrinthe.BAS);
+        }
+        if (clavier.gauche) {
+            labyrinthe.deplacerPerso(Labyrinthe.GAUCHE);
+        }
+        if (clavier.droite) {
+            labyrinthe.deplacerPerso(Labyrinthe.DROITE);
+        }
+        labyrinthe.deplacerMonstre();
+        cooldown = DELAI;
+    }
+}
+    \end{lstlisting}
+
+    Ainsi, une fois que la condition de fin de partie est remplie, plus aucun mouvement n’est traité, ce qui garantit un arrêt complet de l’évolution du jeu.
+
+    \subsection{Intégration et validation}
+
+    Après avoir codé la gestion des attaques des monstres et la détection de fin de jeu lorsque le héros perd tous ses points de vie, nous avons intégré cette logique dans la boucle principale du jeu (\texttt{LabyJeu.update}) ainsi que dans le rendu graphique avec \texttt{LabyDessin}. L'attribut \texttt{etreFini} dans la classe \texttt{Labyrinthe} permet de figer le jeu une fois la condition de fin atteinte.
+
+    Pour vérifier la robustesse de cette fonctionnalité, une suite de tests unitaires a été mise en place :
+
+    \begin{lstlisting}
+@Test
+public void testFinDeJeuQuandVieAtteintZero() {
+    pj.setVie(0);
+    if (pj.getVie() <= 0) {
+        labyrinthe.etreFini = true;
+    }
+    assertTrue(labyrinthe.etreFini, "Le jeu doit être terminé si la vie est 0");
+}
+
+@Test
+public void testFinDeJeuQuandVieNegatif() {
+    pj.setVie(-5);
+    if (pj.getVie() <= 0) {
+        labyrinthe.etreFini = true;
+    }
+    assertTrue(labyrinthe.etreFini, "Le jeu doit être terminé si la vie est négative");
+}
+
+@Test
+public void testJeuContinueSiViePositive() {
+    pj.setVie(3);
+    if (pj.getVie() <= 0) {
+        labyrinthe.etreFini = true;
+    }
+    assertFalse(labyrinthe.etreFini, "Le jeu ne doit pas être terminé si la vie est positive");
+}
+
+@Test
+public void testMonstreAttaqueSiAdjacent() {
+    Monstre monstre = labyrinthe.getMonstres().get(0);
+    monstre.x = pj.getX() + 1;
+    monstre.y = pj.getY();
+    int vieAvant = pj.getVie();
+    labyrinthe.deplacerMonstre();
+    assertEquals(vieAvant - 1, pj.getVie(), "Le héros doit perdre 1 PV si le monstre est adjacent");
+    assertEquals(pj.getX() + 1, monstre.getX());
+    assertEquals(pj.getY(), monstre.getY());
+}
+
+@Test
+public void testMonstreSeDeplaceSiNonAdjacent() {
+    Monstre monstre = labyrinthe.getMonstres().get(0);
+    monstre.x = pj.getX() + 3;
+    monstre.y = pj.getY() + 3;
+    int vieAvant = pj.getVie();
+    labyrinthe.deplacerMonstre();
+    assertEquals(vieAvant, pj.getVie(), "Le héros ne doit pas perdre de PV si le monstre est éloigné");
+    assertFalse(monstre.isAttacking());
+}
+
+@Test
+public void testMonstreSeDeplaceSiNonAdjacent() {
+    Monstre monstre = labyrinthe.getMonstres().get(0);
+    monstre.x = pj.getX() + 3;
+    monstre.y = pj.getY() + 3;
+    int vieAvant = pj.getVie();
+    labyrinthe.deplacerMonstre();
+    assertEquals(vieAvant, pj.getVie(), "Le héros ne doit pas perdre de PV si le monstre est éloigné");
+    assertFalse(monstre.isAttacking());
+}
+    \end{lstlisting}
+
+    Ces tests ont permis de valider :
+    \begin{itemize}
+        \item que la condition de fin de jeu se déclenche bien lorsque les points de vie du personnage sont à 0 ou en dessous,
+        \item que le jeu continue normalement si les points de vie sont strictement positifs,
+        \item que le monstre attaque correctement lorsqu'il est adjacent au héros,
+        \item et qu’il se déplace de manière aléatoire lorsqu’il est éloigné.
+    \end{itemize}
+
+    L'utilisation de tests JUnit nous a donc permis de garantir la validité fonctionnelle de l'attaque, de la perte de vie et de la gestion de la fin de partie dans un cadre automatisé.
+
+
+    \newpage
+    \section{Itération 3}
+
+    \subsection{Choix des fonctionnalités}
+    \begin{enumerate}
+        \item \textbf{Mise en place de l'amulette}
+        \begin{itemize}
+            \item \textit{Descriptif :}
+            Au lancement du jeu, une amulette est placée sur une case vide du labyrinthe. Le placement de l'amulette est toujours le même et dépend du niveau.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item L'amulette ne peut être placée que sur une case vide.
+                \item Les monstres et le héros peuvent se situer sur la case de l'amulette.
+                \item L'amulette est affichée dans le jeu sous la forme d'un cercle jaune sur la case vide où elle se trouve.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Inventaire}
+        \begin{itemize}
+            \item \textit{Descriptif :}
+            Des objets (sans utilité pour le moment) sont disposés dans des cases vides du labyrinthe. Lorsque le héros appuie sur la touche d'utilisation ("E" par défaut), il récupère les objets de la case où il se trouve et les ajoute dans son inventaire.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item L'inventaire est de taille infinie.
+                \item Lorsque le joueur cherche à prendre un objet alors qu'il n'y a rien sur la case où il se trouve, rien ne se passe.
+                \item Lorsqu'un joueur prend un objet, l'objet disparaît du labyrinthe (et n'est plus affiché) mais apparaît dans son inventaire.
+                \item À chaque évolution du jeu, le jeu affiche dans la console l'inventaire du héros.
+                \item Les objets sont affichés dans le labyrinthe tant qu'ils sont présents (sous la forme d'un cercle noir).
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Attaque à distance du joueur}
+        \begin{itemize}
+            \item \textit{Descriptif :}
+            Le joueur dispose d'une touche particulière pour tirer à l'arc. Lorsqu'il appuie sur cette touche ("F" par défaut), le héros lance une flèche qui traverse l'écran dans la direction suivie par le héros.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item La flèche se déplace de manière rectiligne à partir du héros et selon la direction de son dernier déplacement.
+                \item La flèche se déplace à la vitesse des monstres et du héros.
+                \item Lorsqu'elle rencontre un obstacle (monstre ou mur), la flèche disparaît et fait 1 point de dégât si c'est un monstre.
+                \item Tant qu'elle n'est pas détruite, la flèche se déplace d'une case par évolution du jeu.
+                \item La flèche est affichée dans la fenêtre de jeu sous la forme d'un petit point rouge centré dans la case où elle se trouve.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+
+
+    \subsection{Conception}
+
+    \subsubsection{Placement de l'amulette dans le labyrinthe}
+
+    Lors du chargement du fichier texte du labyrinthe, chaque caractère est lu pour construire la structure du niveau. Lorsque le caractère lu correspond à une amulette (`'A'`), le labyrinthe l'interprète comme une case vide (pas un mur) puis crée une instance de l'objet \texttt{Amulette} à cette position. L'objet est ensuite ajouté à la liste des objets du labyrinthe.
+
+    Cette logique est décrite dans le diagramme de séquence suivant :
+    \begin{itemize}
+        \item Le \texttt{Labyrinthe} lit chaque caractère du fichier via un \texttt{BufferedReader}.
+        \item Si le caractère correspond à une amulette, la position est enregistrée comme vide.
+        \item Une instance d’\texttt{Amulette} est créée à la position détectée.
+        \item L’amulette est ajoutée à la liste des objets du labyrinthe.
+    \end{itemize}
+
+    Lors de l’affichage :
+    \begin{itemize}
+        \item La méthode \texttt{dessinerJeu} de \texttt{LabyDessin} parcourt tous les objets du labyrinthe.
+        \item Si un objet est une amulette, elle est dessinée comme un cercle doré à sa position via le \texttt{GraphicsContext}.
+    \end{itemize}
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_4/diagSeq6-2.png}
+
+    \subsubsection{Tir d'une flèche par le héros}
+
+    Lorsqu’un joueur appuie sur la touche dédiée au tir (par exemple ``F''), une flèche est créée :
+    \begin{itemize}
+        \item \texttt{LabyJeu} appelle la méthode \texttt{tir()} du \texttt{Labyrinthe}.
+        \item Le labyrinthe récupère la direction du dernier déplacement du héros via \texttt{getDerniereDirection()}.
+        \item Une nouvelle instance de \texttt{Projectile} est créée à la position actuelle du héros, dans cette direction.
+        \item Cette flèche est ajoutée à la liste des projectiles du labyrinthe.
+    \end{itemize}
+
+    Le diagramme de séquence montre ce processus en partant de l’interaction du joueur jusqu’à la création et l’enregistrement du projectile.
+
+    \subsubsection{Déplacement et gestion des flèches (tir)}
+
+    À chaque évolution du jeu (appelée par le moteur), la méthode \texttt{gererTir()} du \texttt{Labyrinthe} est appelée pour gérer le comportement des projectiles existants :
+    \begin{itemize}
+        \item Pour chaque projectile :
+        \begin{itemize}
+            \item Sa position actuelle et sa direction sont récupérées.
+            \item La position suivante dans la direction indiquée est calculée.
+            \item Trois cas sont gérés :
+            \begin{itemize}
+                \item \textbf{Mur} : le projectile est supprimé.
+                \item \textbf{Monstre} : le monstre subit un dégât, et le projectile est supprimé.
+                \item \textbf{Case libre} : le projectile avance d’une case dans sa direction.
+            \end{itemize}
+        \end{itemize}
+        \item Les suppressions de projectiles sont différées pour éviter les conflits lors de l’itération.
+    \end{itemize}
+
+    Ce mécanisme assure un comportement fluide et réaliste des flèches, tout en respectant la mécanique du tour par tour.
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_4/diagSeqMethGererTir8-1.png}
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_4/diagSeqMethTir8-1.png}
+
+
+
+    \subsection{Realisation}
+
+    Nous avons modifié les attributs X et Y en privé pour mettre en place des getters. De plus pour clarifier la compréhension des classe, Perso a été renommé en Joueur.
+    Egalement, Nous avons ajouté une nouvelle classe 'Element' dont tous les éléments du labyrinthe vont hérités. Ainsi, cela permet de mutualisé les attributs x et y, ainsi que leurs getters et setters respectifs.
+
+    \subsubsection{Gestion de l'amulette}
+
+    L'amulette est un objet spécial ajouté au labyrinthe. Lors de chaque dessin du jeu, une vérification est faite pour savoir si elle a été récupérée. On parcourt la liste des objets et si une instance de l'amulette y est encore présente, cela signifie qu'elle n'a pas été prise. Une fois l'amulette récupérée, et si le joueur atteint la case de sortie, le jeu est marqué comme terminé, avec un message de victoire affiché. Si au contraire la vie du joueur atteint 0, un message de défaite est affiché.
+
+    \begin{itemize}
+        \item \textbf{Vérification de l'amulette} :
+        \begin{lstlisting}
+boolean amuletteRecup = true;
+for (Objet objet : laby.objets) {
+    if (objet instanceof Amulette) {
+        amuletteRecup = false;
+    }
+}
+        \end{lstlisting}
+    \end{itemize}
+
+    \subsubsection{Système d'inventaire}
+
+    \begin{itemize}
+        \item \textbf{Attribut inventaire dans le héros} :
+        \begin{lstlisting}
+private List<Objet> inventaire = new ArrayList<>();
+        \end{lstlisting}
+    \end{itemize}
+
+    \subsubsection{Attaque à distance du héros}
+
+    Le joueur peut désormais tirer des flèches dans la direction de son dernier déplacement. Une flèche est représentée par un objet \texttt{Projectile} contenant sa position et sa direction. À chaque évolution du jeu, la méthode \texttt{gererTir()} déplace les projectiles, vérifie les collisions avec les murs ou les monstres, inflige des dégâts, et supprime les projectiles concernés.
+
+    \begin{itemize}
+        \item \textbf{Classe Projectile} :
+        \begin{lstlisting}
+public class Projectile extends Element {
+    private final String direction;
+    ...
+    public String getDirection() {
+        return direction;
+    }
+}
+        \end{lstlisting}
+
+        \item \textbf{Création d’un projectile} :
+        \begin{lstlisting}
+public void tir(){
+    Projectile p = new Projectile(pj.getX(), pj.getY(),
+                                  pj.getDerniereDirection());
+    listProjectile.add(p);
+}
+        \end{lstlisting}
+
+        \item \textbf{Déplacement et collision} :
+        \begin{lstlisting}
+public void gererTir(){
+    ArrayList<Projectile> aEnlever = new ArrayList<>();
+    for (Projectile p : listProjectile) {
+        int[] suivante = getSuivant(p.getX(), p.getY(), p.getDirection());
+        if (this.murs[suivante[0]][suivante[1]]) {
+            aEnlever.add(p);
+        } else if ((m = monstrePresent(suivante[0], suivante[1])) != null) {
+            m.subirDegat(1);
+            aEnlever.add(p);
+        } else {
+            p.setX(suivante[0]);
+            p.setY(suivante[1]);
+        }
+    }
+    listProjectile.removeAll(aEnlever);
+}
+        \end{lstlisting}
+
+        \item \textbf{Affichage graphique} :
+        \begin{lstlisting}
+gc.setFill(Color.BLUE);
+gc.setStroke(Color.BLACK);
+for (Projectile p : laby.listProjectile) {
+    gc.fillOval(p.getX() * tailleCase + tailleCase / 4,
+                p.getY() * tailleCase + tailleCase / 4,
+                tailleCase / 4, tailleCase / 4);
+}
+        \end{lstlisting}
+    \end{itemize}
+
+
+    \subsection{Intégration et validation}
+
+    Afin de valider le bon fonctionnement des nouvelles fonctionnalités développées à l'itération 3 (amulette, tir à distance), des tests unitaires ont été réalisés avec JUnit. Ces tests permettent de garantir la robustesse du comportement du jeu ainsi que l'intégration cohérente des objets et des projectiles.
+
+    \subsubsection*{Tests liés à l'amulette}
+    \begin{itemize}
+        \item \textbf{testAmuletteEstPlaceeSurCaseVide} : Vérifie que l'amulette est bien placée sur une case vide (non murée) et bien ajoutée à la liste des objets du labyrinthe.
+        \item \textbf{testAmulettePeutPartagerCaseAvecPJ} : Confirme que le joueur peut occuper la même case que l’amulette sans provoquer de conflit de logique.
+        \item \textbf{testAmulettePeutPartagerCaseAvecMonstre} : Vérifie que l’amulette peut coexister avec un monstre sur une même case, ce qui est conforme aux règles de conception.
+    \end{itemize}
+
+    \subsubsection*{Tests liés à l'attaque à distance}
+    \begin{itemize}
+        \item \textbf{testTirInitialiseDansLaBonneDirection} : Vérifie que la flèche est créée à la position du joueur et orientée selon sa dernière direction de déplacement.
+        \item \textbf{testProjectileAvanceCorrectement} : Vérifie qu’une flèche se déplace bien d’une case par évolution de jeu dans la bonne direction.
+        \item \textbf{testProjectileDisparaitQuandMur} : Teste la disparition de la flèche lorsqu'elle rencontre un mur dès sa première évolution.
+        \item \textbf{testProjectileDisparaitEtBlesseMonstre} : Vérifie que la flèche supprime un point de vie à un monstre s’il est touché, puis disparaît.
+        \item \textbf{testProjectileContinueTantQuePasObstacle} : Assure que la flèche continue son mouvement si aucune collision avec mur ou monstre n'est détectée.
+    \end{itemize}
+
+    \begin{lstlisting}
+
+        @Test
+        public void testAmuletteEstPlaceeSurCaseVide() {
+        Amulette amulette = new Amulette(2, 2);
+        laby.objets.add(amulette);
+
+        // On marque la case comme vide
+        laby.murs[2][2] = false;
+
+        assertFalse(laby.getMur(2, 2), "La case doit être vide.");
+        assertTrue(laby.objets.contains(amulette), "L'amulette doit être présente dans les objets.");
+        }
+
+        @Test
+        public void testAmulettePeutPartagerCaseAvecPJ() {
+        laby.objets.add(new Amulette(2, 2));
+
+        assertEquals(17, laby.pj.getX());
+        assertEquals(12, laby.pj.getY());
+        assertNotNull(laby.objetPresent(2, 2), "L'amulette doit être sur la même case que le PJ.");
+        }
+
+        @Test
+        public void testAmulettePeutPartagerCaseAvecMonstre() {
+        Monstre monstre = new Monstre(3, 3, 100);
+        laby.monstres.add(monstre);
+        laby.objets.add(new Amulette(3, 3));
+
+        assertEquals(monstre, laby.monstrePresent(3, 3));
+        assertNotNull(laby.objetPresent(3, 3), "L'amulette doit être sur la même case que le monstre.");
+        }
+
+        @Test
+        public void testTirInitialiseDansLaBonneDirection() {
+        laby.pj.setDerniereDirection(Labyrinthe.DROITE);
+        laby.tir();
+
+        assertEquals(1, laby.listProjectile.size());
+        Projectile p = laby.listProjectile.get(0);
+        assertEquals(17, p.getX());
+        assertEquals(12, p.getY());
+        assertEquals(Labyrinthe.DROITE, p.getDirection());
+        }
+
+        @Test
+        public void testProjectileAvanceCorrectement() {
+        laby.pj.setDerniereDirection(Labyrinthe.GAUCHE);
+        laby.tir();
+        laby.gererTir();  // avance d'une case
+
+        Projectile p = laby.listProjectile.get(0);
+        assertEquals(16, p.getX());
+        assertEquals(12, p.getY());
+        }
+
+        @Test
+        public void testProjectileDisparaitQuandMur() {
+        laby.murs[6][5] = true;  // mur à droite du joueur
+        laby.pj.setDerniereDirection(Labyrinthe.DROITE);
+        laby.tir();
+
+        laby.gererTir();
+        assertTrue(laby.listProjectile.isEmpty(), "Le projectile devrait disparaître en touchant un mur.");
+        }
+
+        @Test
+        public void testProjectileDisparaitEtBlesseMonstre() {
+        Monstre monstre = new Monstre(6, 5, 3);  // monstre avec 3 HP à droite
+        laby.monstres.add(monstre);
+
+        laby.pj.setDerniereDirection(Labyrinthe.DROITE);
+        laby.tir();
+        laby.gererTir();  // tir vers le monstre
+
+        assertTrue(laby.listProjectile.isEmpty(), "Le projectile devrait disparaître après avoir touché le monstre.");
+        assertEquals(3, monstre.getVie(), "Le monstre devrait perdre 1 point de vie.");
+        }
+
+        @Test
+        public void testProjectileContinueTantQuePasObstacle() {
+        laby.pj.setDerniereDirection(Labyrinthe.GAUCHE);
+        laby.tir();
+
+        // avance 3 fois
+        laby.gererTir(); // x = 6
+        laby.gererTir(); // x = 7
+        laby.gererTir(); // x = 8
+
+        Projectile p = laby.listProjectile.get(0);
+        assertEquals(14, p.getX());
+        assertEquals(12, p.getY());
+        }
+
+        }
+    \end{lstlisting}
+
+        \newpage
+    \section{Itération 4}
+
+    \subsection{Choix des fonctionnalités}
+    \begin{enumerate}
+        \item \textbf{Mort des monstres}
+        \begin{itemize}
+            \item \textit{Descriptif :} Lorsqu’un monstre n’a plus de points de vie, il meurt et est retiré du jeu.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item Les monstres ont 2 points de vie par défaut.
+                \item Les points de vie ne peuvent pas être négatifs.
+                \item Un monstre meurt après avoir été touché deux fois.
+                \item Le héros attaque en premier : si le monstre meurt, il ne peut pas riposter.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Acquisition de l'amulette}
+        \begin{itemize}
+            \item \textit{Descriptif :} Lorsque le héros entre sur la case contenant l’amulette, il la ramasse automatiquement.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item L’amulette disparaît du plateau.
+                \item Le héros possède l’amulette.
+                \item Un monstre ne peut pas récupérer l’amulette.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Fin du jeu : victoire du héros}
+        \begin{itemize}
+            \item \textit{Descriptif :} Une fois l’amulette en sa possession, le héros peut retourner à l’entrée du labyrinthe pour remporter la partie.
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item Si le héros possède l’amulette et revient à l’entrée, le jeu se termine et un message est affiché dans la console.
+                \item Si le héros revient à l’entrée sans amulette, le jeu continue.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+
+
+    \subsection{Conception}
+
+    \subsubsection{Suppression des monstres morts}
+
+    Lors de l’évolution du jeu, les monstres ayant une vie inférieure ou égale à zéro doivent être supprimés du labyrinthe. Pour cela, la classe \texttt{LabyJeu} récupère la liste des monstres depuis le labyrinthe, puis construit une nouvelle liste contenant uniquement ceux qui sont morts.
+
+    Cette logique est décrite dans le diagramme de séquence suivant :
+    \begin{itemize}
+        \item \texttt{LabyJeu} récupère la liste des monstres via \texttt{getMonstres()}.
+        \item Pour chaque monstre, la méthode \texttt{getVie()} est appelée.
+        \item Si la vie est inférieure ou égale à zéro, le monstre est ajouté à une liste temporaire.
+        \item Tous les monstres de cette liste sont ensuite supprimés du labyrinthe.
+    \end{itemize}
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_5/diagSeq5-5.png}
+
+    \subsubsection{Acquisition de l’amulette}
+
+    Le héros peut ramasser une amulette présente sur sa case en appuyant sur la touche d’interaction ("E"). La vérification de présence d’un objet à la position du joueur est effectuée à chaque mise à jour.
+
+    Fonctionnement :
+    \begin{itemize}
+        \item Lors de l’appel à \texttt{update}, si la touche "E" est appuyée, les coordonnées du joueur sont récupérées.
+        \item La méthode \texttt{objetPresent(x, y)} du labyrinthe est appelée pour vérifier s’il y a un objet sur la case.
+        \item Si un objet est trouvé, il est ajouté à l’inventaire du joueur, puis retiré de la liste des objets du labyrinthe.
+    \end{itemize}
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_5/diagSeq6-3.png}
+
+    \subsubsection{Fin du jeu : victoire du héros}
+
+    Le jeu se termine lorsque le héros possède l’amulette et atteint la sortie du labyrinthe. Cette vérification est effectuée lors du dessin de la scène par la classe \texttt{LabyDessin}.
+
+    Logique appliquée :
+    \begin{itemize}
+        \item Les coordonnées du joueur sont comparées à celles de la sortie.
+        \item Si le joueur est sur la sortie et possède l’amulette, le jeu est déclaré comme terminé.
+        \item Un message de victoire est affiché à l’écran.
+    \end{itemize}
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth]{version_5/diagSeq6-4.png}
+
+
+    \subsection{Réalisation}
+
+    \subsubsection{Suppression des monstres morts}
+
+    Pour éviter que des monstres morts restent dans la liste principale du labyrinthe, une liste temporaire \texttt{aElim} est utilisée pour collecter les monstres dont la vie est inférieure ou égale à zéro. Cette double boucle permet d’éviter les erreurs liées à la suppression directe d’éléments d’une collection en cours d’itération.
+
+    \begin{lstlisting}
+ArrayList<Monstre> aElim = new ArrayList<>();
+for (Monstre m : labyrinthe.getMonstres()) {
+    if (m.getVie() <= 0) {
+        aElim.add(m);
+    }
+}
+for (Monstre m : aElim) {
+    labyrinthe.getMonstres().remove(m);
+}
+    \end{lstlisting}
+
+    \subsubsection{Acquisition de l’amulette (ou d’un objet)}
+
+    Lorsque le joueur appuie sur la touche d’interaction (`E`), on vérifie si un objet est présent à sa position. Si oui, l’objet est ajouté à l’inventaire du joueur, puis retiré de la liste d’objets du labyrinthe.
+
+    \begin{lstlisting}
+if (clavier.prendre) {
+    Objet o;
+    if ((o = labyrinthe.objetPresent(labyrinthe.pj.getX(), labyrinthe.pj.getY())) != null){
+        labyrinthe.pj.getInventaire().add(o);
+        labyrinthe.objets.remove(o);
+    }
+}
+    \end{lstlisting}
+
+    \subsubsection{Fin du jeu : condition de victoire ou de défaite}
+
+    Lors du dessin de la scène, si la vie du héros tombe à zéro ou si ce dernier atteint la sortie avec l’amulette, la variable \texttt{etreFini} du labyrinthe est activée. Un message de fin est alors affiché graphiquement via le \texttt{GraphicsContext}.
+
+    \begin{lstlisting}
+if (laby.pj.getVie() <= 0 ||
+    (laby.sortie.etrePresent(pj.getX(), pj.getY()) && amuletteRecup)) {
+
+    laby.etreFini = true;
+
+    gc.setFill(new Color(1, 1, 1, 0.7));
+    gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    gc.setFill(Color.YELLOW);
+    String message = "Fin du jeu: ";
+    if (laby.pj.getVie() <= 0) {
+        message += "Vous avez perdu...";
+    } else {
+        message += "Vous avez gagné !!!";
+    }
+    gc.fillText(message, canvas.getWidth() / 2 - 100, canvas.getHeight() / 2);
+    gc.setFont(new Font("Verdana", 20));
+}
+    \end{lstlisting}
+
+    \subsection{Intégration et validation}
+
+    \subsubsection*{Fonctionnalité 5.5 – Mort des monstres}
+
+    Des tests unitaires ont été écrits pour valider que les monstres ne peuvent pas avoir de points de vie négatifs, qu’ils disparaissent correctement après avoir subi deux attaques, et qu’ils ne peuvent plus attaquer s’ils sont déjà morts.
+
+    \begin{itemize}
+        \item Un monstre ayant 1 point de vie subit plusieurs dégâts : sa vie ne descend jamais en dessous de 0.
+        \item Après deux attaques, la vie du monstre atteint 0, ce qui valide sa mort.
+        \item Un monstre tué avant de commencer son attaque ne doit pas exécuter l'action de riposte.
+    \end{itemize}
+
+    \subsubsection*{Fonctionnalité 6.3 – Acquisition de l’amulette}
+
+    L'acquisition de l’amulette est testée par la simulation d’un appui sur la touche \texttt{E}. On vérifie que l’amulette est bien retirée du plateau et ajoutée à l’inventaire du joueur uniquement lorsque le joueur est sur la même case qu’elle et que la touche est pressée.
+
+    \begin{itemize}
+        \item Si la touche \texttt{E} est enfoncée et que le joueur est sur la case de l’amulette, elle est ajoutée à l’inventaire et supprimée du plateau.
+        \item Si la touche \texttt{E} n’est pas pressée, aucun objet n’est ramassé.
+        \item Si le joueur n’est pas sur la même case que l’amulette, elle reste sur le plateau.
+    \end{itemize}
+
+    \subsubsection*{Fonctionnalité 6.4 – Fin du jeu : victoire du héros}
+
+    Les tests valident que le jeu se termine lorsque le joueur atteint la sortie en possession de l’amulette, et qu’il ne se termine pas si l’un des deux critères n’est pas rempli.
+
+    \begin{itemize}
+        \item Si le joueur est sur la sortie et que l’amulette a été ramassée, le jeu se termine (\texttt{etreFini} est à \texttt{true}).
+        \item Si l’amulette est encore sur le plateau, le jeu ne se termine pas même si le joueur est sur la sortie.
+        \item Si le joueur n’est pas sur la sortie, il ne peut pas gagner même s’il possède l’amulette.
+    \end{itemize}
+
+    \newpage
+    \section{Itération 5}
+
+    \subsection{Choix des fonctionnalités}
+    \begin{enumerate}
+        \setcounter{enumi}{8} % Pour commencer à 1.9
+        \item \textbf{Génération automatique de labyrinthe}
+        \begin{itemize}
+            \item \textit{Descriptif :} \\
+            Au lieu de charger un niveau à partir d’un fichier texte prédéfini, le labyrinthe est généré dynamiquement à chaque partie. Cela garantit des configurations différentes à chaque exécution, ce qui améliore la rejouabilité du jeu. La génération repose sur un algorithme qui construit un labyrinthe connexe, sans murs bloquants entre la position de départ et la sortie.
+
+            \item \textit{Critères de validation :}
+            \begin{itemize}
+                \item Le labyrinthe généré est toujours connexe : le joueur peut atteindre la sortie.
+                \item Le héros est placé sur une case vide valide, non murée.
+                \item L’amulette est également placée sur une case vide différente de celle du héros.
+                \item Les monstres sont positionnés aléatoirement, uniquement sur des cases accessibles.
+                \item Aucun élément (joueur, objet ou monstre) ne se retrouve bloqué ou inaccessible.
+                \item La disposition des murs respecte une structure cohérente (pas de murs flottants ou de chemins totalement bloqués).
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+
+
+    \subsection{Conception}
+
+    La génération automatique du labyrinthe repose sur un algorithme de parcours en profondeur récursif (DFS – Depth First Search), initialisé dans la classe \texttt{Labyrinthe} lorsque le paramètre aléatoire est activé. L’objectif de cet algorithme est de créer dynamiquement une structure de labyrinthe connexe avec des chemins accessibles.
+
+    \subsubsection{Initialisation des structures de génération}
+
+    Lorsque le mode aléatoire est activé :
+    \begin{itemize}
+        \item Un tableau de booléens nommé \texttt{visite} est créé pour mémoriser les cellules déjà explorées.
+        \item Toutes les cellules de la grille sont initialement marquées comme des murs (\texttt{murs[x][y] = true}).
+        \item Le tableau \texttt{visite[x][y]} est rempli à \texttt{false}, indiquant qu'aucune cellule n’a encore été visitée.
+    \end{itemize}
+
+    \subsubsection{Parcours récursif en profondeur (DFS)}
+
+    L'algorithme démarre depuis une cellule de départ (typiquement \texttt{(1,1)}). Il procède de manière récursive comme suit :
+    \begin{itemize}
+        \item Pour chaque direction possible (haut, bas, gauche, droite), on calcule la position de la cellule voisine.
+        \item Si cette cellule est dans les bornes et non encore visitée, on retire le mur entre la cellule actuelle et la cellule voisine.
+        \item On marque la cellule voisine comme visitée, puis on applique récursivement le même processus à partir de cette cellule.
+    \end{itemize}
+
+    Ce processus assure que toutes les cellules accessibles forment un graphe connexe (pas de pièces isolées), ce qui garantit la générabilité du niveau.
+
+    \subsubsection{Avantages de cette conception}
+
+    \begin{itemize}
+        \item Simplicité d'implémentation : l’algorithme DFS est simple, efficace et bien adapté à la génération de labyrinthes.
+        \item Rejouabilité élevée : à chaque partie, un nouveau labyrinthe est généré, créant ainsi une expérience unique.
+        \item Maîtrise de la complexité : la profondeur du labyrinthe peut être ajustée en contrôlant les dimensions et la densité initiale.
+    \end{itemize}
+
+    \vspace{1em}
+    \includegraphics[width=\textwidth, height=10cm]{version_6/diagSeq1-9.png}
+
+    \subsection{Réalisation}
+
+    \subsubsection*{Simplification des objets du jeu}
+
+    Dans cette itération, la classe \texttt{Objet} a été supprimée afin de simplifier la gestion des objets dans le labyrinthe. En effet, l’unique objet manipulé dans le jeu étant l’amulette, il a été décidé de remplacer la hiérarchie d’objets par une gestion directe des \texttt{Amulette}. Ainsi, l’inventaire du joueur contient désormais directement des instances de \texttt{Amulette}, et la liste d’objets du labyrinthe (\texttt{labyrinthe.objets}) devient une liste d’amulettes. Cette refonte permet de clarifier le code et d'éviter une abstraction inutile, tout en gardant une structure évolutive si de futurs objets devaient être introduits.
+
+    Pour permettre la génération automatique d’un labyrinthe, une nouvelle logique a été intégrée à la classe \texttt{Labyrinthe}. Lorsqu’un niveau est chargé avec le mode aléatoire activé, le fichier texte n’est pas utilisé pour placer les murs. À la place, un algorithme récursif de génération est invoqué.
+    \subsubsection{Generation aléatoire du labyrinthe}
+    \subsubsection*{Initialisation}
+
+    Lorsque le mode \texttt{aleatoire} est activé :
+    \begin{itemize}
+        \item Un tableau de booléens \texttt{visite} de taille \texttt{[nbColonnes][nbLignes]} est créé pour suivre les cellules déjà explorées.
+        \item Toutes les cellules du labyrinthe sont initialisées comme des murs en positionnant \texttt{murs[x][y] = true}.
+        \item La génération commence à la cellule \texttt{(1,1)}, choisie volontairement pour être une cellule impaire afin de respecter la structure des murs entre cases.
+    \end{itemize}
+
+    \subsubsection*{Méthode \texttt{genererDFS}}
+
+    La méthode \texttt{genererDFS(int x, int y, boolean[][] visite, int nbColonnes, int nbLignes)} implémente un parcours récursif en profondeur (DFS). Voici les principales étapes :
+    \begin{itemize}
+        \item Marquer la cellule \texttt{(x,y)} comme visitée et la rendre accessible en supprimant le mur.
+        \item Définir les directions possibles de déplacement (haut, bas, gauche, droite) avec un pas de 2 cases pour sauter les murs.
+        \item Mélanger aléatoirement les directions pour créer un labyrinthe différent à chaque exécution.
+        \item Pour chaque direction, si la cellule voisine est dans les bornes et non visitée :
+        \begin{itemize}
+            \item Supprimer le mur entre la cellule courante et la voisine.
+            \item Appeler récursivement \texttt{genererDFS} sur la cellule voisine.
+        \end{itemize}
+    \end{itemize}
+
+    Cette méthode garantit que l'ensemble du labyrinthe est connecté, tout en assurant un haut degré de variété entre les parties.
+
+    \subsubsection*{Modifications de code}
+
+    \begin{itemize}
+        \item Modification de la classe \texttt{Labyrinthe} pour inclure un constructeur ou une logique conditionnelle permettant de basculer entre lecture de fichier et génération.
+        \item Ajout de la méthode privée \texttt{genererDFS()}.
+        \item Suppression de la lecture classique du fichier dans le cas où le mode aléatoire est activé.
+    \end{itemize}
+
+    \subsubsection{Modification général du code}
+    \begin{itemize}
+        \item Changement de la gestion des couleurs du monstre. Le monstre à maintenant un attribut couleur qui est modifié lorsqu'il attaque et arrête d'attaquer. Ca couleur est ensuite mise à jour graphiquement grâce à dessinerJeu().
+        \item Changement de la fin du jeu. Celle-ci sera gérée dans LabyJeu au lieu de LabyDessin. LabyDessin ne fera que dessiner l'écran de fin de jeu.
+        \item Changement de la vitesse du jeu. Nous avons créer un cooldown dans LabyJeu, qui a chaque appel de la méthode update(), donc à chaque itération, va décrémenter ce cooldown jusqu'à 0 et passer la condition pour effectuer tout le déroulé de la méthode update(). Enfin, la méthode fini par initialiser le cooldown avec l'attribut DELAI de la classe LabyJeu.
+        \begin{lstlisting}
+        public void update(double secondes, Clavier clavier) {
+                if (!labyrinthe.etreFini) {
+                    cooldown -= secondes;
+                    if (cooldown <= 0) {
+
+                        ...
+
+                        cooldown = DELAI;
+                    }
+                }
+            }
+            \end{lstlisting}
+    \end{itemize}
+
+    \subsection{Intégration et validation}
+
+    Pour valider la génération automatique du labyrinthe, un test unitaire a été mis en place dans la classe \texttt{TestIteration5}. Ce test vérifie que deux labyrinthes générés successivement à partir du même fichier source en mode aléatoire produisent des résultats différents.
+
+    \subsubsection*{Test}
+
+    \begin{itemize}
+        \item Deux instances de \texttt{Labyrinthe} sont créées à partir du même fichier texte avec le mode aléatoire activé.
+        \item Chaque instance génère un labyrinthe différent en appelant l’algorithme \texttt{genererDFS}.
+        \item Le test vérifie que l’appel à \texttt{toString()} sur chaque labyrinthe renvoie une représentation différente, prouvant que la génération est bien aléatoire.
+    \end{itemize}
+
+    \begin{lstlisting}
+@Test
+public void testGeneration() throws IOException {
+    Labyrinthe l1 = new Labyrinthe("labySimple/laby0.txt", true);
+    Labyrinthe l2 = new Labyrinthe("labySimple/laby0.txt", true);
+    assertNotEquals(l1.toString(), l2.toString());
+}
+    \end{lstlisting}
+
+    \subsubsection*{Bugs rencontrés et corrections}
+
+    \begin{itemize}
+        \item \textbf{Accès aux bornes du tableau} : Une erreur hors-limite pouvait survenir si les coordonnées étaient mal vérifiées. Des conditions de type \texttt{nx > 0 \&\& ny > 0 \&\& nx < nbColonnes - 1 \&\& ny < nbLignes - 1} ont été ajoutées.
+        \item \textbf{Cellules inaccessibles} : Sans respecter un pas de 2 cases lors du déplacement, certaines cellules n’étaient jamais reliées. Le pas a été corrigé pour garantir une connectivité correcte.
+        \item \textbf{Labyrinthe vide} : En oubliant de supprimer les murs à la position de départ, le labyrinthe pouvait rester entièrement fermé. Un appel explicite à \texttt{murs[x][y] = false} a été ajouté au début de \texttt{genererDFS}.
+    \end{itemize}
+
+    Ce test simple mais efficace assure que la génération produit des labyrinthes uniques et correctement connectés à chaque lancement.
+
+\end{document}

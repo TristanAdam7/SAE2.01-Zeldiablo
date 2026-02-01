@@ -1,0 +1,61 @@
+@startuml
+participant "mj : MoteurJeu" as mj
+participant "labyJeu : LabyJeu" as labyJeu
+participant "laby : Labyrinthe" as laby
+participant "joueur : Joueur" as joueur
+participant "objet : Objet" as objet
+participant "inventaire : ArrayList<Objet>" as inventaire
+participant "objets : ArrayList<Objet>" as objets
+
+mj -> labyJeu : update(secondes : double, clavier : Clavier)
+activate labyJeu
+alt si la touche 'E' est appuyée
+labyJeu -> joueur : getX()
+activate joueur
+joueur --> labyJeu : int
+deactivate joueur
+labyJeu -> joueur : getY()
+activate joueur
+joueur --> labyJeu : int
+deactivate joueur
+
+labyJeu -> laby : objetPresent(x,y)
+activate laby
+loop pour chaque objet dans objets
+
+    laby -> objet : getX()
+    activate objet
+    objet --> laby : int
+    deactivate objet
+    laby -> objet : getY()
+    activate objet
+    objet --> laby : int
+    deactivate objet
+    laby -> joueur : etrePresent(x, y)
+    activate joueur
+    joueur --> laby : boolean
+    deactivate joueur
+end
+
+	laby --> labyJeu : objet ou null
+	deactivate laby
+
+    alt si personnage est sur la case de l'objet
+        labyJeu -> joueur : getInventaire()
+        activate joueur
+        joueur --> labyJeu : Inventaire
+        deactivate joueur
+        labyJeu -> inventaire : add(objet)
+        activate inventaire
+        inventaire --> labyJeu
+        deactivate inventaire
+        labyJeu -> objets : remove(objet)
+        activate objets
+        objets --> labyJeu
+        deactivate objets
+    end
+end
+labyJeu --> mj
+deactivate labyJeu
+
+@enduml

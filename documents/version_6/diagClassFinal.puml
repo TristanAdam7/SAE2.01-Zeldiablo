@@ -1,0 +1,136 @@
+@startuml
+abstract class Element {
+	- x : int
+	- y : int
+	+ Element(x : int, y : int)
+	+ etrePresent(dx : int, dy : int) : boolean
+	+ getX() : int
+	+ getY() : int
+	+ setX (x : int) : void
+	+ setY (y : int) : void
+}
+
+class Amulette extends Element{
+	+ Amulette(x : int, y : int)
+}
+
+abstract class Personnage extends Element {
+    - vie : int
+    + Personnage(x : int, y : int, vie : int)
+    + subirDegats(nbrDegats : int) : void
+    + getVie() : int
+    + setVie(vie : int) : void
+}
+
+class Monstre extends Personnage {
+	- attaque : boolean
+	- couleur : Color
+    + Monstre(x : int, y : int, vie : int)
+    + attaquer(cible : Personnage) : void
+    + estAdjacent(p : Personnage) : boolean
+    + stopAttaque() : void
+    + isAttacking() : boolean
+    + getCouleur() : Color
+}
+
+class Sortie extends Element {
+  + Sortie(x : int, y : int)
+}
+
+class Projectile extends Element {
+    - direction : String
+    + Projectile(x : int, y : int, direction : String)
+    + getDirection() : String
+}
+
+class Joueur extends Personnage {
+    - inventaire : ArrayList<Objet>
+    - derniereDirection : String
+    + Joueur(x : int, y : int, vie : int)
+    + setDerniereDirection(derniereDirection : String) : void
+    + getDerniereDirection() : String
+    + getInventaire() : List<Objet>
+}
+
+class Labyrinthe {
+    -murs : boolean[][]
+    +<static> MUR : char = 'X'
+    +<static> PJ : char = 'P'
+    +<static> VIDE : char = '.'
+    +<static> MONSTRE : char = 'M'
+    +<static> AMULETTE : char = 'A'
+    +<static> HAUT : String = 'Haut'
+    +<static> BAS : String = 'Bas'
+    +<static> GAUCHE : String = 'Gauche'
+    +<static> DROITE : String = 'Droite'
+    + pj : Joueur
+    + sortie : Sortie
+    + monstres : ArrayList<Monstre>
+    + objets : ArrayList<Objet>
+    + listProjectile : ArrayList<Projectile>
+    + etreFini : boolean
+    + Labyrinthe(largeur : int, hauteur : int)
+    + Labyrinthe(nomFichier : String, aleatoire : boolean)
+    - genererDFS(x : int, y : int, visite : boolean[][], nbColonnes : int, nbLignes : int) : void
+    + deplacerPerso(action : String) : void
+    + deplacerMonstre() : void
+    + monstrePresent(x : int, y : int) : Monstre
+    + objetPresent(x : int, y : int) : Objet
+    + tir() : void
+    + gererTir() : void
+    + getLengthY() : int
+    + getLength() : int
+    + getMur(x : int, y : int) : boolean
+    + getSuivant(x : int, y : int, action : String) : int[]
+    + getObjets() : ArrayList<Objet>
+    + getMonstres() : ArrayList<Monstre>
+}
+
+interface DessinJeu {
+	dessinerJeu(jeu : Jeu, canva : Canvas) : void
+}
+
+
+class LabyDessin implements DessinJeu {
+        + LabyDessin(aleatoire : boolean) : void
+	+ dessinerJeu(jeu : Jeu, canva : Canvas) : void
+}
+
+interface Jeu {
+	update(secondes : double, clavier : Clavier) : void
+	init() : void
+	etreFini() : boolean
+}
+
+class LabyJeu implements Jeu {
+	- labyrinthe : Labyrinthe
+	- cooldown : double
+	- DELAI : double = 0.075
+	+ LabyJeu()
+	+ update(secondes : double, clavier : Clavier) : void
+	+ init() : void
+	+ etreFini() : boolean
+	+ getLabyrinthe : Labyrinthe
+}
+
+class MoteurJeu extends Application {
+    - <static> WIDTH : double
+    - <static> HEIGHT : double
+    - <static> FPS : double
+    + <static> launch(jeu : Jeu, dessin : DessinJeu)
+    + <static> setTaille(width : double, height : double)
+    + <static> setFPS(fps : int)
+    + start(primaryStage : Stage)
+    + startAnimation(canvas : Canvas)
+}
+
+Labyrinthe "*" --> "1" Joueur : -pj
+Joueur "1" --> "0..*" Amulette: -inventaire
+Labyrinthe "*" --> "0..*" Monstre : -monstres
+Labyrinthe "*" --> "0..*" Amulette: -objets
+Labyrinthe "*" --> "1" Sortie : -sortie
+Labyrinthe "*" --> "0..*" Projectile : -listProjectile
+LabyJeu "1" --> "1" Labyrinthe : -labyrinthe
+MoteurJeu --> Jeu : utilise
+MoteurJeu --> DessinJeu : utilise
+@enduml

@@ -1,0 +1,3 @@
+attributs x et y en private
+Perso devient Joueur
+Ajout de la classe élément, classe parent de tous les éléments de la carte

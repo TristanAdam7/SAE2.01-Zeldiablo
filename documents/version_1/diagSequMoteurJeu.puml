@@ -1,0 +1,47 @@
+@startuml
+actor Main
+participant MainLaby
+participant LabyJeu
+participant LabyDessin
+participant MoteurJeu
+participant Labyrinthe
+
+Main -> MainLaby: main()
+activate MainLaby
+
+MainLaby -> LabyJeu: new LabyJeu()
+activate LabyJeu
+LabyJeu -> Labyrinthe: new Labyrinthe("labySimple/laby1.txt")
+activate Labyrinthe
+Labyrinthe --> LabyJeu: labyrinthe
+deactivate Labyrinthe
+LabyJeu --> MainLaby: jeuLaby
+deactivate LabyJeu
+
+MainLaby -> LabyDessin: new LabyDessin()
+activate LabyDessin
+LabyDessin --> MainLaby: dessinLaby
+deactivate LabyDessin
+
+MainLaby -> MoteurJeu: setTaille(800, 600)
+activate MoteurJeu
+MoteurJeu --> MainLaby
+deactivate MoteurJeu
+MainLaby -> MoteurJeu: setFPS(60)
+activate MoteurJeu
+MoteurJeu --> MainLaby
+deactivate MoteurJeu
+MainLaby -> MoteurJeu: launch(jeuLaby, dessinLaby)
+activate MoteurJeu
+
+MoteurJeu -> MoteurJeu: start()
+note right: Initialise l'interface graphique\net lance la boucle de jeu
+MoteurJeu --> MainLaby
+
+deactivate MoteurJeu
+MainLaby --> Main
+
+
+deactivate MainLaby
+
+@enduml

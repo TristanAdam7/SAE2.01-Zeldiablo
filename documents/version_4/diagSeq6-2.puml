@@ -1,0 +1,39 @@
+@startuml
+participant "mj : MoteurJeu" as mj
+participant "laby : Labyrinthe" as Laby
+participant "labyDessin : LabyDessin" as LD
+participant "amulette : Amulette" as amu
+participant "gc : GraphicsContext" as GC
+
+activate Laby
+
+
+loop pour chaque caractère dans le fichier
+	alt caractère == 'A'
+		Laby -> Laby : murs[col][row] = false
+		create amu
+		Laby -> amu : new Amulette(col, row)
+
+		Laby -> Laby : objets.add(Amulette)
+	end
+	deactivate Laby
+end
+
+
+mj -> LD : dessinerJeu(jeu, canvas)
+activate LD
+
+loop objets
+    LD -> GC : setFill(Color.GOLD)
+    activate GC
+    GC --> LD
+    deactivate GC
+    LD -> GC : fillOval(x * tailleCase + tailleCase / 4, y * tailleCase + tailleCase / 4, tailleCase / 2, tailleCase / 2)
+    activate GC
+    GC --> LD
+    deactivate GC
+end
+LD --> mj
+deactivate LD
+
+@enduml

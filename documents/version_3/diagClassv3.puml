@@ -1,0 +1,47 @@
+@startuml
+abstract class Personnage {
+    - x : int
+    - y : int
+    - vie : int
+    + getX() : int
+    + getY() : int
+    + getVie() : int
+    + etrePresent() : boolean
+    + subirDegats(nbrDegats : int)
+}
+
+class Monstre extends Personnage {
+	- attaque : boolean
+    + Monstre(x : int, y : int)
+    + attaquer(cible : Personnage)
+    + estAdjacent(p : Personnage) : boolean
+    + isAttacking() : boolean
+    + stopAttaque() :
+   }
+
+class Perso extends Personnage {
+    + Perso(x : int, y : int)
+}
+
+class Labyrinthe {
+    -murs : boolean[][]
+    +etreFini : boolean
+    +<static> MUR : char = 'X'
+    +<static> PJ : char = 'P'
+    +<static> VIDE : char = '.'
+    +<static> HAUT : String = 'Haut'
+    +<static> BAS : String = 'Bas'
+    +<static> GAUCHE : String = 'Gauche'
+    +<static> DROITE : String = 'Droite'
+    +getSuivant(x : int, y : int, action : String) : int
+    +deplacerPerso(action : String)
+    +getLengthY() : int
+    +getLength() : int
+    +getMur(x : int, y : int) : boolean
+    +deplacerMonstre() : void
+    +getMonstre() : ArrayList<Monstre>
+}
+
+Labyrinthe "*" --> "1" Perso : -pj
+Labyrinthe "*" --> "*" Monstre : -monstres
+@enduml

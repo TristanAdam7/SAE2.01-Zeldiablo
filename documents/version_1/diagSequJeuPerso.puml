@@ -1,0 +1,21 @@
+@startuml
+actor Joueur
+
+participant "Labyrinthe" as L
+participant "Perso" as P
+
+Joueur -> L : deplacerPerso("Gauche")
+activate L
+
+L -> L : getSuivant(pj.x, pj.y, "Gauche")
+note right of L : Calcule la case suivante\n(x - 1, y)
+
+L -> L : murs[suivante[0]][suivante[1]]
+note right of L : Vérifie si ce n'est pas un mur
+
+L -> P : x = suivante[0]
+L -> P : y = suivante[1]
+
+L --> Joueur : 
+deactivate L
+@enduml

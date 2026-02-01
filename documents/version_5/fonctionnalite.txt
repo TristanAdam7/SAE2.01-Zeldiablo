@@ -1,0 +1,29 @@
+5.5 Mort des monstres
+Difficulté : 2 étoiles
+Lorsqu'un monstre n'a plus de points de vie, il meurt et disparait du jeu.
+Critères de validation
+• Les monstres ont par défaut 2 points de vie et ne peuvent pas avoir de points de
+vie négatifs.
+• Lorsqu'un monstre par défaut est touché deux fois, il disparait.
+• Le héros attaque avant le monstre, si le monstre meurt, le monstre n'a pas le
+temps de répliquer et disparait avant.
+
+6.3 Acquisition de l'amulette
+Difficulté : 2 étoiles
+Dés que le joueur demande à déplacer le héros sur l'amulette, le héros se déplace et
+prend l'amulette.
+Critères de validation
+• L'amulette n'est plus sur le plateau (et n'est plus achée).
+• Le Héros possède l'amulette.
+• Un monstre ne récupère pas l'amulette
+
+6.4 Fin du jeu : victoire du héros
+Difficulté : 2 étoiles
+Une fois que le héros a pris l'amulette, il peut retourner à l'entrée du labyrinthe et
+remporter le jeu.
+COO- TD - Projet Zeldiabolo - Liste des fonctionnalités 16
+Critères de validation
+• Lorsque le héros possède l'amulette et qu'il retourne à l'entrée du labyrinthe, le
+jeu s'arrête et un message est aché dans la console.
+• Lorsque le héros ne possède pas l'amulette, le jeu ne s'arrête pas même si le héros
+retourne à l'entrée.

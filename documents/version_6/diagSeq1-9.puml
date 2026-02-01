@@ -1,0 +1,40 @@
+@startuml
+participant "labyrinthe:Labyrinthe" as Laby
+participant "murs[][]" as mur
+participant "visite[][]" as visite
+
+alt aleatoire == true
+    Laby -> Laby : init visite[nbColonnes][nbLignes]
+
+    loop pour tout x et y
+        Laby -> mur : murs[x][y] = true
+        activate mur
+        mur --> Laby : void
+        deactivate mur
+        Laby -> visite : visite[x][y] = false
+        activate visite
+        visite --> Laby : void
+        deactivate visite
+    end
+
+    Laby -> Laby : genererDFS(1, 1, visite, nbColonnes, nbLignes)
+
+    activate Laby
+
+    loop pour chaque direction
+        alt nx, ny valides et non visités
+            Laby -> mur : murs[murX][murY] = false
+            activate mur
+            mur --> Laby : void
+            deactivate mur
+            Laby -> visite : visite[murX][murY] = true
+            activate visite
+            visite --> Laby : void
+            deactivate visite
+            Laby -> Laby : genererDFS(nx, ny, visite, nbColonnes, nbLignes)
+        end
+    end
+    Laby --> Laby : void
+    deactivate Laby
+end
+@enduml

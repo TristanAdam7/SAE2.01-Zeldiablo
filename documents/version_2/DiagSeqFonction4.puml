@@ -1,0 +1,53 @@
+@startuml
+participant "moteurJeu : MoteurJeu" as Mj
+participant "jeuLaby : LabyJeu" as Jeu
+participant "labyrinthe : Labyrinthe" as Laby
+participant "mosntre : Monstre" as Monstre
+participant "perso : Perso" as Perso
+
+Mj -> Jeu : update()
+activate Jeu
+
+Jeu -> Laby : deplacerMonstre()
+activate Laby
+
+Laby -> Monstre : getX()
+activate Monstre
+Monstre --> Laby : x : int
+deactivate Monstre
+
+Laby -> Monstre : getY()
+activate Monstre
+Monstre --> Laby : y : int
+deactivate Monstre
+
+Laby -> Laby : calcul nx et ny\n(nouvelle position)
+
+Laby -> Laby : getMur(nx, ny)
+activate Laby
+Laby --> Laby : boolean
+deactivate Laby
+
+alt case non mur
+    Laby -> Perso : getX()
+    activate Perso
+    Perso --> Laby : x : int
+    deactivate Perso
+    
+    Laby -> Perso : getY()
+    activate Perso
+    Perso --> Laby : y : int
+    deactivate Perso
+
+    alt case non occupée par perso
+        Laby -> Monstre : x = nx
+        Laby -> Monstre : x = ny
+    end
+end
+
+Laby --> Jeu
+deactivate Laby
+
+Jeu --> Mj
+deactivate Jeu
+@enduml

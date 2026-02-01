@@ -1,0 +1,27 @@
+@startuml
+participant "moteurjeu : MoteurJeu" as mj
+participant "laby : Labyrinthe" as laby
+participant "monstre : Monstre" as monstre
+participant "perso : Perso" as perso
+
+mj -> laby : deplacerMonstre()
+activate laby
+
+loop pour chaque monstre
+    laby -> monstre : estAdjacent(pj)
+    activate monstre
+    monstre --> laby : boolean
+    deactivate monstre
+    
+    alt est adjacent au joueur
+        laby -> perso : subirDegat(1)
+        activate perso
+        perso --> laby
+        deactivate perso
+    end
+end
+
+laby --> mj
+deactivate laby
+
+@enduml

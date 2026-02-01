@@ -1,0 +1,79 @@
+@startuml
+class Monstre extends Personnage {
+    + Monstre(x : int, y : int)
+   }
+
+class Perso extends Personnage {
+    + Perso(x : int, y : int)
+}
+
+abstract class Personnage {
+    - x : int
+    - y : int
+    + getX() : inta
+    + getY() : int
+    + etrePresent() : boolean
+    + subirDegats(nbrDegats : int)
+}
+
+class Labyrinthe {
+    -murs : boolean[][]
+    +<static> MUR : char = 'X'
+    +<static> PJ : char = 'P'
+    +<static> VIDE : char = '.'
+    +<static> HAUT : String = 'Haut'
+    +<static> BAS : String = 'Bas'
+    +<static> GAUCHE : String = 'Gauche'
+    +<static> DROITE : String = 'Droite'
+    +getSuivant(x : int, y : int, action : String) : int
+    +deplacerPerso(action : String)
+    +etreFini() : boolean
+    +getLengthY() : int
+    +getLength() : int
+    +getMur(x : int, y : int) : boolean
+    +deplacerMonstre() : void
+    +getMonstre() : ArrayList<Monstre>
+}
+
+class LabyJeu {
+    -labyrinthe : Labyrinthe
+    +LabyJeu() 
+    +update(secondes : double, clavier : Clavier)
+    +getLabyrinthe() : Labyrinthe
+    +init()
+    +etreFini() : boolean
+}
+
+class LabyDessin {
+    + dessinerJeu(jeu : Jeu, canvas : Canvas)
+}
+
+interface Jeu {
+    + update(secondes : double, clavier : Clavier)
+    + init()
+    + etreFini() : boolean
+}
+
+interface DessinJeu {
+    + dessinerJeu(jeu : Jeu, canvas : Canvas)
+}
+
+class MoteurJeu {
+    +<static> width : double
+    +<static> height : double
+    +<static> FPS : int
+    +<static> launch(jeu : Jeu, dessin : DessinJeu)
+    +<static> setTaille(width : double, height : double)
+    +<static> setFPS(fps : int)
+    +start(primaryStage : Stage)
+    +startAnimation(canvas : Canvas)
+}
+
+MoteurJeu "1" --> "1" Jeu : -<static> jeu
+MoteurJeu "1" --> "1" DessinJeu : -<static> dessin
+Jeu <|.. LabyJeu
+DessinJeu <|.. LabyDessin
+LabyJeu --> Labyrinthe
+Labyrinthe "*" --> "1" Perso : -pj
+Labyrinthe "*" --> "*" Monstre : -monstres
+@enduml

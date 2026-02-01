@@ -1,0 +1,8 @@
+1.9 Génération automatique de labyrinthe
+Difficulté : 5 étoiles
+Les niveaux ne sont pas stockés en mémoire, mais le labyrinthe est généré automatiquement par le jeu (ce qui permet d'avoir des parties à chaque fois différentes)
+Critères de validation
+• Les monstres, les objets et le héros sont bien placés sur des cases vides
+• Vous pourrez vous inspirer de la page suivante
+• les critères de validation sont à détailler en fonction de la méthode de génération
+suivie.

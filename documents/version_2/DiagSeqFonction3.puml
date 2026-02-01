@@ -1,0 +1,43 @@
+@startuml
+participant "moteur : MoteurJeu" as Mj
+participant "jeuLaby : LabyJeu" as LabyJeu
+participant "labyrinthe : Labyrinthe" as Laby
+participant "perso : Perso" as Perso
+participant "monstre : Monstre" as Monstre
+
+Mj -> LabyJeu : update(duree, clavier)
+
+activate LabyJeu
+LabyJeu -> Laby : deplacerPerso(action)
+
+activate Laby
+Laby -> Perso : getX()
+
+activate Perso
+Perso --> Laby : x : int
+deactivate Perso
+
+Laby -> Perso : getY()
+
+activate Perso
+Perso --> Laby : y : int
+deactivate Perso
+
+Laby -> Laby : getSuivant(x, y, action)
+Laby -> Monstre : etrePresent(suivante[0], suivante[1])
+
+activate Monstre
+Monstre --> Laby : boolean
+deactivate Monstre
+
+alt !etrePresent(suivante[0], suivante[1])
+    Laby -> Perso : x = suivante[0]
+    Laby -> Perso : y = suivante[1]
+end
+
+Laby --> LabyJeu
+deactivate Laby
+
+LabyJeu --> Mj
+deactivate LabyJeu
+@enduml

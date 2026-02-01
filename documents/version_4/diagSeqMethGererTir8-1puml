@@ -1,0 +1,60 @@
+@startuml
+participant "labyjeu : LabyJeu" as labyjeu
+participant "laby : Labyrinthe" as laby
+participant "j : Joueur" as perso
+participant "proj : Projectile" as proj
+participant "projectiles : ArrayList<Projectile>" as projs
+
+labyjeu -> laby : gererTir()
+activate laby
+loop pour chaque projectile dans projs
+    laby -> proj : getX()
+    activate proj
+    proj --> laby : int x
+    deactivate proj
+    
+    laby -> proj : getY()
+    activate proj
+    proj --> laby : int y
+    deactivate proj
+    
+    laby -> proj : getDirection()
+    activate proj
+    proj --> laby : Direction
+    deactivate proj
+    
+    activate laby
+    laby -> laby : getSuivant(x, y, Direction)
+    deactivate laby
+    
+    alt Mur sur la position
+        laby -> projs : remove(proj)
+        activate projs
+        projs --> laby
+        deactivate projs
+    else Monstre sur la position
+        laby -> monstre : subirDegat(1)
+        activate monstre
+        monstre --> laby
+        deactivate monstre
+        
+        laby -> projs : remove(proj)
+        activate projs
+        projs --> laby
+        deactivate projs
+    else Position libre
+        laby -> proj : setX(x)
+        activate proj
+        proj --> laby
+        deactivate proj
+        
+        laby -> proj : setY(y)
+        activate proj
+        proj --> laby
+        deactivate proj
+    end
+end
+
+laby --> labyjeu
+deactivate laby
+@enduml

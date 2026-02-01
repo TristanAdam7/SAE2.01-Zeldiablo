@@ -1,0 +1,42 @@
+@startuml
+actor Joueur
+participant "jeuLaby : LabyJeu" as Jeu
+participant "laby : Labyrinthe" as Laby
+participant "Fichier labyrinthe" as Fichier
+participant "perso : Perso"
+
+Joueur -> Jeu : new LabyJeu()
+activate Jeu
+
+Jeu -> Laby : new Labyrinthe("laby1.txt")
+activate Laby
+
+Laby -> Fichier : lireFichier("laby1.txt")
+activate Fichier
+Fichier --> Laby : String (BufferedReader)
+deactivate Fichier
+
+loop pour chaque case du fichier
+    alt caractère = 'M'
+        alt position valide
+            Laby -> Monstre : new Monstre(x, y)
+            activate Monstre
+            Monstre --> Laby : instance Monstre
+            deactivate Monstre
+        else position invalide (même case que perso)
+            Laby -> Laby : ignorer monstre ou lever erreur
+            note right
+              Impossible car il est normalement impossible de placer deux caractères sur un emplacement
+            end note
+        end
+    else autre caractère
+        Laby -> Laby : traiter normalement
+    end
+end
+
+Laby --> Jeu : instance Labyrinthe
+deactivate Laby
+
+Jeu --> Joueur : instance LabyJeu
+deactivate Jeu
+@enduml

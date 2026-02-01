@@ -1,0 +1,48 @@
+@startuml
+actor "Système de Jeu" as Systeme
+participant "lJ : LabyJeu" as Jeu
+participant "laby : Labyrinthe" as Lab
+participant "monstres : ArrayList<Monstre>" as ListeTemp
+participant "monstre : Monstre" as M
+
+Systeme -> Jeu : update(secondes, clavier)
+activate Jeu
+
+Jeu -> Lab : getMonstres()
+activate Lab
+Lab --> Jeu : ArrayList<Monstre>
+deactivate Lab
+
+Jeu -> ListeTemp : new ArrayList<Monstre>()
+activate ListeTemp
+ListeTemp --> Jeu : void
+deactivate ListeTemp
+
+loop pour chaque m : Monstre
+    Jeu -> M : getVie()
+    activate M
+    M --> Jeu : int
+    deactivate M
+    alt vie <= 0
+        Jeu -> ListeTemp : add(m)
+        activate ListeTemp
+        ListeTemp --> Jeu : void
+        deactivate ListeTemp
+    end
+end
+
+loop pour chaque mElimine : ListeTemp
+    Jeu -> Lab : getMonstres()
+    activate Lab
+    Lab --> Jeu : ArrayList<Monstre>
+    deactivate Lab
+
+    Jeu -> Lab : getMonstres().remove(mElimine)
+    activate Lab
+    Lab --> Jeu : void
+    deactivate Lab
+end
+
+Jeu --> Systeme : 
+deactivate Jeu
+@enduml

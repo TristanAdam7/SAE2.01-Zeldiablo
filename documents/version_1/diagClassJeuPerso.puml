@@ -1,0 +1,28 @@
+@startuml
+package gameLaby{
+class Labyrinthe {
+- char[][] laby
++ Labyrinthe(String[] data)
++ void affiche()
++ char getCase(int x, int y)
++ void setCase(int x, int y, char c)
++ boolean estValide(int x, int y)
++ boolean estMur(int x, int y)
++ int getLargeur()
++ int getHauteur()
+}
+
+class Perso {
+- int x
+- int y
+- Labyrinthe lab
++ Perso(int x, int y, Labyrinthe lab)
++ void deplace(int dx, int dy)
++ void affiche()
++ int getX()
++ int getY()
+}
+}
+
+Labyrinthe "1" --> "*" Perso : -pj
+@enduml

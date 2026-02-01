@@ -1,0 +1,65 @@
+@startuml
+participant "labyDessin:LabyDessin" as dessin
+participant "labyrinthe:Labyrinthe" as laby
+participant "joueur:Joueur" as pj
+participant "sortie:Sortie" as Sortie
+participant "canvas:Canvas" as canvas
+participant "graphicsContext:GraphicsContext" as gc
+
+dessin -> laby : getPerso()
+activate laby
+laby --> dessin : pj
+deactivate laby
+
+dessin -> pj : getVie()
+activate pj
+pj --> dessin : int
+deactivate pj
+
+dessin -> pj : getX(), getY()
+activate pj
+pj --> dessin : x, y
+deactivate pj
+
+dessin -> Sortie : etrePresent(x, y)
+activate Sortie
+Sortie --> dessin : true/false
+deactivate Sortie
+
+alt (vie <= 0 || à la sortie avec amulette)
+    dessin -> laby : etreFini = true
+    activate laby
+    laby --> dessin
+    deactivate laby
+
+    dessin -> gc : setFill(Color(1,1,1,0.7))
+    activate gc
+    gc --> dessin : void
+    deactivate gc
+    dessin -> gc : fillRect(0, 0, canvas.getWidth(), canvas.getHeight())
+    activate gc
+    gc --> dessin : void
+    deactivate gc
+    dessin -> gc : setFill(Color.YELLOW)
+    activate gc
+    gc --> dessin : void
+    deactivate gc
+
+    alt vie <= 0
+        dessin -> gc : fillText("Fin du jeu: Vous avez perdu...", ...)
+        activate gc
+        gc --> dessin : void
+        deactivate gc
+    else
+        dessin -> gc : fillText("Fin du jeu: Vous avez gagné !!!", ...)
+        activate gc
+        gc --> dessin : void
+        deactivate gc
+    end
+
+    dessin -> gc : setFont(Font("Verdana", 20))
+    activate gc
+    gc --> dessin : void
+    deactivate gc
+end
+@enduml
